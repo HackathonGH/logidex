@@ -89,7 +89,7 @@ function Users() {
               <TableRow key={u.id}>
                 <TableCell>{u.full_name}<div className="text-xs text-muted-foreground">{u.company}</div></TableCell>
                 <TableCell className="text-sm">{u.is_internal ? u.username : u.email}</TableCell>
-                <TableCell className="text-sm">{u.roles.map((r) => t(`role_${r}`)).join(", ") || "—"}</TableCell>
+                <TableCell className="text-sm">{u.roles.filter((r): r is AppRole => (ASSIGNABLE_ROLES as string[]).includes(r)).map((r) => t(`role_${r}`)).join(", ") || "—"}</TableCell>
                 <TableCell><Badge variant={u.status === "active" ? "default" : "outline"}>{t(`st_${u.status}` as never)}</Badge></TableCell>
                 <TableCell>
                   {u.is_internal && <Switch checked={u.can_scan_qr} onCheckedChange={(v) => update(u.id, null, v)} />}
