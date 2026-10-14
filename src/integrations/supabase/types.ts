@@ -314,11 +314,15 @@ export type Database = {
       }
       reservations: {
         Row: {
+          arrived_at: string | null
           cancel_reason: string | null
           code: string
           company_id: string
           created_at: string
           created_by: string | null
+          departed_at: string | null
+          dock_id: number | null
+          dock_released_at: string | null
           driver_doc: string | null
           driver_name: string
           ends_at: string
@@ -334,14 +338,20 @@ export type Database = {
           total_pallets: number
           tractor_plate: string
           trailer_plate: string | null
+          unload_ended_at: string | null
+          unload_started_at: string | null
           updated_at: string
         }
         Insert: {
+          arrived_at?: string | null
           cancel_reason?: string | null
           code?: string
           company_id: string
           created_at?: string
           created_by?: string | null
+          departed_at?: string | null
+          dock_id?: number | null
+          dock_released_at?: string | null
           driver_doc?: string | null
           driver_name: string
           ends_at: string
@@ -357,14 +367,20 @@ export type Database = {
           total_pallets: number
           tractor_plate: string
           trailer_plate?: string | null
+          unload_ended_at?: string | null
+          unload_started_at?: string | null
           updated_at?: string
         }
         Update: {
+          arrived_at?: string | null
           cancel_reason?: string | null
           code?: string
           company_id?: string
           created_at?: string
           created_by?: string | null
+          departed_at?: string | null
+          dock_id?: number | null
+          dock_released_at?: string | null
           driver_doc?: string | null
           driver_name?: string
           ends_at?: string
@@ -380,6 +396,8 @@ export type Database = {
           total_pallets?: number
           tractor_plate?: string
           trailer_plate?: string | null
+          unload_ended_at?: string | null
+          unload_started_at?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -388,6 +406,13 @@ export type Database = {
             columns: ["company_id"]
             isOneToOne: false
             referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reservations_dock_id_fkey"
+            columns: ["dock_id"]
+            isOneToOne: false
+            referencedRelation: "docks"
             referencedColumns: ["id"]
           },
         ]
@@ -556,6 +581,7 @@ export type Database = {
           used: number
         }[]
       }
+      can_gate: { Args: { _user_id: string }; Returns: boolean }
       carrier_available_slots: {
         Args: { _date: string; _pallets: number }
         Returns: string[]
@@ -597,6 +623,24 @@ export type Database = {
         Returns: undefined
       }
       complete_password_change: { Args: never; Returns: undefined }
+      free_docks: { Args: { _id: string }; Returns: number[] }
+      gate_lookup: {
+        Args: { _token: string }
+        Returns: {
+          code: string
+          company: string
+          driver_doc: string
+          driver_name: string
+          ends_at: string
+          id: string
+          starts_at: string
+          status: string
+          tractor_plate: string
+          trailer_plate: string
+          valid: boolean
+        }[]
+      }
+      gate_register_arrival: { Args: { _token: string }; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -615,6 +659,14 @@ export type Database = {
       shift_max_pallets: {
         Args: { _code: string; _date: string }
         Returns: number
+      }
+      staff_advance: {
+        Args: { _action: string; _id: string }
+        Returns: undefined
+      }
+      staff_assign_dock: {
+        Args: { _dock: number; _id: string }
+        Returns: undefined
       }
       submit_company_registration: {
         Args: { _name: string; _phone: string; _tax_id: string }
