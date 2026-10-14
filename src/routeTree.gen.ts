@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedBloqueosRouteImport } from './routes/_authenticated/bloqueos'
 import { Route as AuthenticatedInicioRouteImport } from './routes/_authenticated/inicio'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedAdminAjustesRouteImport } from './routes/_authenticated/admin.ajustes'
@@ -31,6 +32,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedBloqueosRoute = AuthenticatedBloqueosRouteImport.update({
+  id: '/bloqueos',
+  path: '/bloqueos',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedInicioRoute = AuthenticatedInicioRouteImport.update({
@@ -70,6 +76,7 @@ const AuthenticatedReservasIdRoute = AuthenticatedReservasIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/bloqueos': typeof AuthenticatedBloqueosRoute
   '/inicio': typeof AuthenticatedInicioRoute
   '/admin/ajustes': typeof AuthenticatedAdminAjustesRoute
   '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
@@ -79,6 +86,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/bloqueos': typeof AuthenticatedBloqueosRoute
   '/inicio': typeof AuthenticatedInicioRoute
   '/admin/ajustes': typeof AuthenticatedAdminAjustesRoute
   '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
@@ -91,6 +99,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/_authenticated/bloqueos': typeof AuthenticatedBloqueosRoute
   '/_authenticated/inicio': typeof AuthenticatedInicioRoute
   '/_authenticated/admin/ajustes': typeof AuthenticatedAdminAjustesRoute
   '/_authenticated/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
@@ -103,6 +112,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/bloqueos'
     | '/inicio'
     | '/admin/ajustes'
     | '/admin/usuarios'
@@ -112,6 +122,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/bloqueos'
     | '/inicio'
     | '/admin/ajustes'
     | '/admin/usuarios'
@@ -123,6 +134,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/_authenticated/admin'
+    | '/_authenticated/bloqueos'
     | '/_authenticated/inicio'
     | '/_authenticated/admin/ajustes'
     | '/_authenticated/admin/usuarios'
@@ -157,6 +169,13 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/bloqueos': {
+      id: '/_authenticated/bloqueos'
+      path: '/bloqueos'
+      fullPath: '/bloqueos'
+      preLoaderRoute: typeof AuthenticatedBloqueosRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/inicio': {
@@ -221,6 +240,7 @@ const AuthenticatedAdminRouteWithChildren =
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+  AuthenticatedBloqueosRoute: typeof AuthenticatedBloqueosRoute
   AuthenticatedInicioRoute: typeof AuthenticatedInicioRoute
   AuthenticatedReservasIdRoute: typeof AuthenticatedReservasIdRoute
   AuthenticatedReservasIndexRoute: typeof AuthenticatedReservasIndexRoute
@@ -228,6 +248,7 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+  AuthenticatedBloqueosRoute: AuthenticatedBloqueosRoute,
   AuthenticatedInicioRoute: AuthenticatedInicioRoute,
   AuthenticatedReservasIdRoute: AuthenticatedReservasIdRoute,
   AuthenticatedReservasIndexRoute: AuthenticatedReservasIndexRoute,

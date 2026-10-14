@@ -34,7 +34,7 @@ export const TIME_SLOTS = Array.from({ length: 96 }, (_, i) => `${String(Math.fl
 
 function madridParts(d: Date) {
   const f = new Intl.DateTimeFormat("en-GB", { timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
-  const p = Object.fromEntries(f.formatToParts(d).map((x) => [x.type, x.value]));
+  const p = Object.fromEntries(f.formatToParts(d).map((x) => [x.type, x.value])) as Record<"year" | "month" | "day" | "hour" | "minute", string>;
   return { date: `${p.year}-${p.month}-${p.day}`, time: `${p.hour}:${p.minute}` };
 }
 
