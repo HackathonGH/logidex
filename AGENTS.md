@@ -18,3 +18,4 @@
 - Reservation wall-clock times are Europe/Madrid; RPCs take local date+time and convert in SQL, display uses Intl with timeZone Europe/Madrid.
 - Carrier booking writes go only through carrier_* SQL functions (company derived from caller via carrier_company()), so carriers can never act on another company's reservations.
 - Operational cycle transitions and dock assignment live only in SQL (staff_advance, staff_assign_dock, gate_register_arrival); src/lib/reservations.ts nextAction mirrors the order for UI only.
+- Incidents and goods reconciliation writes go only through staff_* SQL functions (staff_create_incident, staff_set_incident_status, staff_reconcile_order); checkGoods in src/lib/reservations.ts mirrors them for UI. Incident attachments live in the private incident-files bucket under <incident_id>/, staff-only.

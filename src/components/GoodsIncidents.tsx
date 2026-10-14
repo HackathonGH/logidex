@@ -44,8 +44,8 @@ export function GoodsPanel({ reservationId, status }: { reservationId: string; s
       </div>
       {list.map((o) => <OrderRow key={o.id} o={o} editable={arrived} />)}
       {arrived && list.length > 0 && (
-        <div className="grid grid-cols-5 gap-1 rounded-md bg-muted p-2 text-center text-xs">
-          {(["planned", "presented", "accepted", "rejected", "missing"] as const).map((k) => <div key={k} className="text-muted-foreground">{t(k)}</div>)}
+        <div className="grid grid-cols-5 gap-1 rounded-md bg-muted p-2 text-center text-[11px]">
+          {(["planned", "presented", "accepted", "rejected", "missing"] as const).map((k) => <div key={k} className="truncate text-muted-foreground" title={t(k)}>{t(k)}</div>)}
           <strong>{sum("pallets")}</strong><strong>{sum("pallets_presented")}</strong><strong>{sum("pallets_accepted")}</strong><strong>{sum("pallets_rejected")}</strong><strong>{sum("pallets_missing")}</strong>
         </div>
       )}
