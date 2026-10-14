@@ -8,6 +8,13 @@
       "when": 1791994993747,
       "tag": "0000_phase1_foundations",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791997894301,
+      "tag": "0001_reservations_blocks_capacity",
+      "breakpoints": true
     }
   ]
 }
