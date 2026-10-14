@@ -121,7 +121,7 @@ export function IncidentsPanel({ reservationId }: { reservationId: string }) {
       const ids = [...new Set(list.map((i) => i.created_by).filter(Boolean))] as string[];
       const { data: people } = ids.length ? await supabase.from("profiles").select("id, full_name, username").in("id", ids) : { data: [] };
       const files = await Promise.all(list.map(async (i) => (await supabase.storage.from("incident-files").list(i.id)).data ?? []));
-      return list.map((i, k) => ({ ...i, author: people?.find((p) => p.id === i.created_by), files: files[k].map((f) => f.name) }));
+      return list.map((i, k) => ({ ...i, author: people?.find((p) => p.id === i.created_by), files: (files[k] ?? []).map((f) => f.name) }));
     },
   });
   const [open, setOpen] = useState(false);
