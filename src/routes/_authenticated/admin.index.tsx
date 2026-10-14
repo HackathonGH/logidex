@@ -22,7 +22,7 @@ function Requests() {
   });
   async function review(id: string, approve: boolean) {
     const { error } = await supabase.rpc("review_link_request", { _request_id: id, _approve: approve });
-    if (error) return toast.error(t("error"));
+    if (error) { toast.error(t("error")); return; }
     toast.success(t("saved"));
     qc.invalidateQueries({ queryKey: ["link-requests"] });
   }

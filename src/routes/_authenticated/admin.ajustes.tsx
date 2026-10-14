@@ -23,7 +23,7 @@ function Settings() {
   async function save(e: React.FormEvent) {
     e.preventDefault();
     const { error } = await supabase.rpc("admin_update_settings", { _phone: phone, _email: email });
-    if (error) return toast.error(t("error"));
+    if (error) { toast.error(t("error")); return; }
     toast.success(t("saved"));
     qc.invalidateQueries({ queryKey: ["settings"] });
   }

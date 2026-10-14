@@ -51,7 +51,7 @@ function Users() {
   }
   async function update(id: string, status: string | null, canScan: boolean | null) {
     const { error } = await supabase.rpc("admin_update_user", { _user_id: id, _status: status as string, _can_scan: canScan as boolean });
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     qc.invalidateQueries({ queryKey: ["users"] });
   }
 
