@@ -14,3 +14,5 @@
 - Internal staff sign in with a username mapped to a synthetic email (usernameToEmail in src/lib/roles.ts); accounts are created server-side by admins, because auth requires an email.
 - UI strings live in src/lib/i18n.tsx (es/en/ca, Spanish default) — no i18n library, to keep bundle small.
 - Signed-in pages live under src/routes/_authenticated (client-only gate); the welcome/login page is the public index.
+- Capacity rules (15-min slots, max 2 simultaneous, free docks, blocks, closed holidays, shift pallets) live only in the SQL function check_capacity, called by every RPC that writes reservations, so the rule can't be bypassed or drift; src/lib/reservations.ts only mirrors format checks for UI feedback.
+- Reservation wall-clock times are Europe/Madrid; RPCs take local date+time and convert in SQL, display uses Intl with timeZone Europe/Madrid.
