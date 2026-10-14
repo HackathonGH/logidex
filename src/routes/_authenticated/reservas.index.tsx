@@ -90,7 +90,7 @@ function ReservationList() {
             {q.data?.map((r) => (
               <TableRow key={r.id} className="cursor-pointer">
                 <TableCell>
-                  <Link to="/reservas/$id" params={{ id: r.id }} className="font-medium text-secondary-foreground underline-offset-2 hover:underline">{r.code}</Link>
+                  <Link to="/reservas/$id" params={{ id: r.id }} className="font-medium text-primary underline-offset-2 hover:underline">{r.code}</Link>
                 </TableCell>
                 <TableCell className="whitespace-nowrap text-sm">{fmtDateTime(r.starts_at, lang)} – {fmtTime(r.ends_at)}</TableCell>
                 <TableCell className="text-sm">{r.companies?.name}</TableCell>
