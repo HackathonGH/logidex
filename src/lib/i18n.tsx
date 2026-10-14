@@ -65,8 +65,6 @@ const dict = {
   role_admin: { es: "Administrador", en: "Administrator", ca: "Administrador" },
   role_administrativo: { es: "Administrativo", en: "Office staff", ca: "Administratiu" },
   role_transportista: { es: "Transportista", en: "Carrier", ca: "Transportista" },
-  role_bascula: { es: "Báscula", en: "Weighbridge", ca: "Bàscula" },
-  role_almacen: { es: "Almacén", en: "Warehouse", ca: "Magatzem" },
   st_pending: { es: "Pendiente", en: "Pending", ca: "Pendent" },
   st_active: { es: "Activo", en: "Active", ca: "Actiu" },
   st_rejected: { es: "Rechazado", en: "Rejected", ca: "Rebutjat" },

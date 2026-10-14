@@ -5,7 +5,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useI18n } from "@/lib/i18n";
-import { INTERNAL_ROLES, type AppRole } from "@/lib/roles";
+import { ASSIGNABLE_ROLES, type AppRole } from "@/lib/roles";
 import { createInternalUser } from "@/lib/admin.functions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -66,7 +66,7 @@ function Users() {
           <Label>{t("role")}</Label>
           <Select value={f.role} onValueChange={(v) => setF({ ...f, role: v as AppRole })}>
             <SelectTrigger><SelectValue /></SelectTrigger>
-            <SelectContent>{INTERNAL_ROLES.map((r) => <SelectItem key={r} value={r}>{t(`role_${r}`)}</SelectItem>)}</SelectContent>
+            <SelectContent>{ASSIGNABLE_ROLES.map((r) => <SelectItem key={r} value={r}>{t(`role_${r}`)}</SelectItem>)}</SelectContent>
           </Select>
         </div>
         <Button type="submit">{t("create")}</Button>
