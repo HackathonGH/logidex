@@ -92,9 +92,6 @@ function Users() {
                 <TableCell className="text-sm">{u.roles.filter((r): r is AppRole => (ASSIGNABLE_ROLES as string[]).includes(r)).map((r) => t(`role_${r}`)).join(", ") || "—"}</TableCell>
                 <TableCell><Badge variant={u.status === "active" ? "default" : "outline"}>{t(`st_${u.status}` as never)}</Badge></TableCell>
                 <TableCell>
-                  {u.is_internal && <Switch checked={u.can_scan_qr} onCheckedChange={(v) => update(u.id, null, v)} />}
-                </TableCell>
-                <TableCell>
                   {u.status === "disabled" ? (
                     <Button size="sm" variant="outline" onClick={() => update(u.id, "active", null)}>{t("activate")}</Button>
                   ) : u.status === "active" ? (
