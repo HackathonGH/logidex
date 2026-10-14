@@ -12,4 +12,6 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  // Pre-bundle so first visit to the QR page does not trigger a dependency re-optimization reload.
+  vite: { optimizeDeps: { include: ["qrcode.react"] } },
 });
