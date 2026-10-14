@@ -323,6 +323,7 @@ export type Database = {
           driver_name: string
           ends_at: string
           id: string
+          penalty: boolean
           qr_token: string
           qr_valid: boolean
           rescheduled: boolean
@@ -345,6 +346,7 @@ export type Database = {
           driver_name: string
           ends_at: string
           id?: string
+          penalty?: boolean
           qr_token?: string
           qr_valid?: boolean
           rescheduled?: boolean
@@ -367,6 +369,7 @@ export type Database = {
           driver_name?: string
           ends_at?: string
           id?: string
+          penalty?: boolean
           qr_token?: string
           qr_valid?: boolean
           rescheduled?: boolean
@@ -553,6 +556,37 @@ export type Database = {
           used: number
         }[]
       }
+      carrier_available_slots: {
+        Args: { _date: string; _pallets: number }
+        Returns: string[]
+      }
+      carrier_cancel_reservation: {
+        Args: { _id: string; _reason: string }
+        Returns: boolean
+      }
+      carrier_company: { Args: never; Returns: string }
+      carrier_create_reservation: {
+        Args: {
+          _date: string
+          _driver_doc: string
+          _driver_name: string
+          _orders: Json
+          _time: string
+          _tractor_plate: string
+          _trailer_plate: string
+        }
+        Returns: string
+      }
+      carrier_update_driver: {
+        Args: {
+          _driver_doc: string
+          _driver_name: string
+          _id: string
+          _tractor_plate: string
+          _trailer_plate: string
+        }
+        Returns: undefined
+      }
       check_capacity: {
         Args: {
           _end: string
@@ -586,6 +620,7 @@ export type Database = {
         Args: { _name: string; _phone: string; _tax_id: string }
         Returns: string
       }
+      validate_orders_json: { Args: { _orders: Json }; Returns: number }
     }
     Enums: {
       app_role:

@@ -15,6 +15,13 @@
       "when": 1791997894301,
       "tag": "0001_reservations_blocks_capacity",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791998882730,
+      "tag": "0002_admin_only_capacity_and_carrier_booking",
+      "breakpoints": true
     }
   ]
 }
