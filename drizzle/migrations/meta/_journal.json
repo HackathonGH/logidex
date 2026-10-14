@@ -22,6 +22,20 @@
       "when": 1791998882730,
       "tag": "0002_admin_only_capacity_and_carrier_booking",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1792000115728,
+      "tag": "0003_add_control_accesos_role",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792000147760,
+      "tag": "0004_gate_dock_operations",
+      "breakpoints": true
     }
   ]
 }

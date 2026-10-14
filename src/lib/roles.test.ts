@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { menuForRoles, usernameToEmail, ASSIGNABLE_ROLES } from "./roles";
 
-const keys = (r: Parameters<typeof menuForRoles>[0], s = false) => menuForRoles(r, s).map((i) => i.key);
+const keys = (r: Parameters<typeof menuForRoles>[0]) => menuForRoles(r).map((i) => i.key);
 
 describe("role menus", () => {
   it("only admin sees administration", () => {
@@ -9,12 +9,12 @@ describe("role menus", () => {
     expect(keys(["administrativo"])).not.toContain("menu_admin");
   });
   it("admin and administrativo can edit reservations and blocks", () => {
-    expect(keys(["administrativo"])).toEqual(["menu_reservations", "menu_blocks"]);
+    expect(keys(["administrativo"])).toEqual(["menu_operations", "menu_reservations", "menu_blocks", "menu_scan"]);
     expect(keys(["transportista"])).not.toContain("menu_reservations");
   });
-  it("QR scan only when permission granted to internal staff", () => {
-    expect(keys(["administrativo"])).not.toContain("menu_scan");
-    expect(keys(["administrativo"], true)).toContain("menu_scan");
+  it("Control de accesos only sees the QR scan", () => {
+    expect(keys(["control_accesos"])).toEqual(["menu_scan"]);
+    expect(keys(["transportista"])).not.toContain("menu_scan");
   });
 });
 
@@ -26,7 +26,7 @@ describe("usernameToEmail", () => {
 });
 
 describe("assignable roles", () => {
-  it("match the PRD: admin, administrativo, transportista", () => {
-    expect(ASSIGNABLE_ROLES).toEqual(["admin", "administrativo", "transportista"]);
+  it("admin, administrativo, transportista and control de accesos", () => {
+    expect(ASSIGNABLE_ROLES).toEqual(["admin", "administrativo", "transportista", "control_accesos"]);
   });
 });

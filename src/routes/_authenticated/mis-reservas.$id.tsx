@@ -35,6 +35,12 @@ function BookingDetail() {
       return { r, orders: orders ?? [] };
     },
   });
+  useEffect(() => {
+    const ch = supabase.channel(`booking-${id}`)
+      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "reservations", filter: `id=eq.${id}` }, () => qc.invalidateQueries({ queryKey: ["my-booking", id] }))
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, [id, qc]);
   const [d, setD] = useState({ name: "", doc: "", tractor: "", trailer: "" });
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState("");
@@ -70,6 +76,15 @@ function BookingDetail() {
           </div>
           <StatusBadges status={r.status} rescheduled={r.rescheduled} penalty={r.penalty} />
         </div>
+
+        {["on_site", "unloading", "unloaded"].includes(r.status) && (
+          <div className="rounded-xl border-2 border-secondary bg-secondary/10 p-6 text-center">
+            {r.status === "on_site" && !r.dock_id && <p className="font-display text-xl font-semibold">{t("carrierWaiting")}</p>}
+            {r.status === "on_site" && r.dock_id && <p className="font-display text-2xl font-semibold">{t("carrierGoDock")} <span className="text-4xl">{r.dock_id}</span></p>}
+            {r.status === "unloading" && <p className="font-display text-xl font-semibold">{t("carrierUnloading")} {r.dock_id}</p>}
+            {r.status === "unloaded" && <p className="font-display text-xl font-semibold">{t("carrierDone")}</p>}
+          </div>
+        )}
 
         <section className="space-y-2 rounded-xl border border-border bg-card p-5">
           <h2 className="font-display font-semibold">{t("orders")}</h2>

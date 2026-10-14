@@ -80,3 +80,14 @@ export function meetsAdvance(startISO: string, now: Date = new Date()): boolean 
 export function isLateCancel(startISO: string, now: Date = new Date()): boolean {
   return !meetsAdvance(startISO, now);
 }
+
+/** Whole minutes between two instants, or null when either is missing. */
+export function minutesBetween(a?: string | null, b?: string | null): number | null {
+  if (!a || !b) return null;
+  return Math.round((new Date(b).getTime() - new Date(a).getTime()) / 60000);
+}
+
+/** Next operational action allowed for a status (mirrors staff_advance in the database). */
+export function nextAction(status: string): "start" | "end" | "release" | "depart" | null {
+  return ({ on_site: "start", unloading: "end", unloaded: "release", dock_released: "depart" } as const)[status as "on_site"] ?? null;
+}

@@ -47,7 +47,7 @@ function Home() {
     );
   }
 
-  const items = menuForRoles(roles, profile?.can_scan_qr);
+  const items = menuForRoles(roles);
   return (
     <AppShell name={name}>
       <h1 className="font-display text-2xl font-semibold">{t("hello")}, {name}</h1>

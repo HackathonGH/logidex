@@ -10,7 +10,6 @@ import { createInternalUser } from "@/lib/admin.functions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -80,7 +79,6 @@ function Users() {
               <TableHead>{t("username")} / {t("email")}</TableHead>
               <TableHead>{t("role")}</TableHead>
               <TableHead>{t("status")}</TableHead>
-              <TableHead>{t("scanPerm")}</TableHead>
               <TableHead />
             </TableRow>
           </TableHeader>
@@ -91,9 +89,6 @@ function Users() {
                 <TableCell className="text-sm">{u.is_internal ? u.username : u.email}</TableCell>
                 <TableCell className="text-sm">{u.roles.filter((r): r is AppRole => (ASSIGNABLE_ROLES as string[]).includes(r)).map((r) => t(`role_${r}`)).join(", ") || "—"}</TableCell>
                 <TableCell><Badge variant={u.status === "active" ? "default" : "outline"}>{t(`st_${u.status}` as never)}</Badge></TableCell>
-                <TableCell>
-                  {u.is_internal && <Switch checked={u.can_scan_qr} onCheckedChange={(v) => update(u.id, null, v)} />}
-                </TableCell>
                 <TableCell>
                   {u.status === "disabled" ? (
                     <Button size="sm" variant="outline" onClick={() => update(u.id, "active", null)}>{t("activate")}</Button>

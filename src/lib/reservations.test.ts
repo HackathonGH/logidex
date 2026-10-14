@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { durationForPallets, validateOrders, madridToISO, toMadrid, errorCode, meetsAdvance, isLateCancel } from "./reservations";
+import { durationForPallets, validateOrders, madridToISO, toMadrid, errorCode, meetsAdvance, isLateCancel, nextAction, minutesBetween } from "./reservations";
 
 describe("duration by pallets", () => {
   it("follows the PRD table", () => {
@@ -42,4 +42,18 @@ describe("24h carrier rule", () => {
   it("less than 24 hours is blocked", () => expect(meetsAdvance("2026-10-15T09:45:00Z", now)).toBe(false));
   it("cancel under 24h is subject to penalty", () => expect(isLateCancel("2026-10-15T09:00:00Z", now)).toBe(true));
   it("cancel with 24h or more has no penalty", () => expect(isLateCancel("2026-10-15T10:00:00Z", now)).toBe(false));
+});
+
+describe("operational cycle", () => {
+  it("goes arrival → start → end → release → depart, in order", () => {
+    expect(nextAction("on_site")).toBe("start");
+    expect(nextAction("unloading")).toBe("end");
+    expect(nextAction("unloaded")).toBe("release");
+    expect(nextAction("dock_released")).toBe("depart");
+    expect(nextAction("departed")).toBeNull();
+    expect(nextAction("confirmed")).toBeNull();
+  });
+  it("delay is arrival minus scheduled time in minutes", () => {
+    expect(minutesBetween("2026-10-15T08:00:00Z", "2026-10-15T08:20:00Z")).toBe(20);
+  });
 });

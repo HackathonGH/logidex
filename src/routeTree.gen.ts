@@ -11,9 +11,11 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthenticatedAccesoRouteImport } from './routes/_authenticated/acceso'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedBloqueosRouteImport } from './routes/_authenticated/bloqueos'
 import { Route as AuthenticatedInicioRouteImport } from './routes/_authenticated/inicio'
+import { Route as AuthenticatedOperacionesRouteImport } from './routes/_authenticated/operaciones'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedAdminAjustesRouteImport } from './routes/_authenticated/admin.ajustes'
 import { Route as AuthenticatedAdminUsuariosRouteImport } from './routes/_authenticated/admin.usuarios'
@@ -32,6 +34,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAccesoRoute = AuthenticatedAccesoRouteImport.update({
+  id: '/acceso',
+  path: '/acceso',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -47,6 +54,12 @@ const AuthenticatedInicioRoute = AuthenticatedInicioRouteImport.update({
   path: '/inicio',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedOperacionesRoute =
+  AuthenticatedOperacionesRouteImport.update({
+    id: '/operaciones',
+    path: '/operaciones',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -96,9 +109,11 @@ const AuthenticatedReservasIdRoute = AuthenticatedReservasIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/acceso': typeof AuthenticatedAccesoRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/bloqueos': typeof AuthenticatedBloqueosRoute
   '/inicio': typeof AuthenticatedInicioRoute
+  '/operaciones': typeof AuthenticatedOperacionesRoute
   '/admin/ajustes': typeof AuthenticatedAdminAjustesRoute
   '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
   '/mis-reservas/$id': typeof AuthenticatedMisReservasIdRoute
@@ -110,8 +125,10 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/acceso': typeof AuthenticatedAccesoRoute
   '/bloqueos': typeof AuthenticatedBloqueosRoute
   '/inicio': typeof AuthenticatedInicioRoute
+  '/operaciones': typeof AuthenticatedOperacionesRoute
   '/admin/ajustes': typeof AuthenticatedAdminAjustesRoute
   '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
   '/mis-reservas/$id': typeof AuthenticatedMisReservasIdRoute
@@ -125,9 +142,11 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/_authenticated/acceso': typeof AuthenticatedAccesoRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/bloqueos': typeof AuthenticatedBloqueosRoute
   '/_authenticated/inicio': typeof AuthenticatedInicioRoute
+  '/_authenticated/operaciones': typeof AuthenticatedOperacionesRoute
   '/_authenticated/admin/ajustes': typeof AuthenticatedAdminAjustesRoute
   '/_authenticated/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
   '/_authenticated/mis-reservas/$id': typeof AuthenticatedMisReservasIdRoute
@@ -141,9 +160,11 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/acceso'
     | '/admin'
     | '/bloqueos'
     | '/inicio'
+    | '/operaciones'
     | '/admin/ajustes'
     | '/admin/usuarios'
     | '/mis-reservas/$id'
@@ -155,8 +176,10 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/acceso'
     | '/bloqueos'
     | '/inicio'
+    | '/operaciones'
     | '/admin/ajustes'
     | '/admin/usuarios'
     | '/mis-reservas/$id'
@@ -169,9 +192,11 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/_authenticated/acceso'
     | '/_authenticated/admin'
     | '/_authenticated/bloqueos'
     | '/_authenticated/inicio'
+    | '/_authenticated/operaciones'
     | '/_authenticated/admin/ajustes'
     | '/_authenticated/admin/usuarios'
     | '/_authenticated/mis-reservas/$id'
@@ -203,6 +228,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/acceso': {
+      id: '/_authenticated/acceso'
+      path: '/acceso'
+      fullPath: '/acceso'
+      preLoaderRoute: typeof AuthenticatedAccesoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
       path: '/admin'
@@ -222,6 +254,13 @@ declare module '@tanstack/react-router' {
       path: '/inicio'
       fullPath: '/inicio'
       preLoaderRoute: typeof AuthenticatedInicioRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/operaciones': {
+      id: '/_authenticated/operaciones'
+      path: '/operaciones'
+      fullPath: '/operaciones'
+      preLoaderRoute: typeof AuthenticatedOperacionesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/admin/': {
@@ -299,9 +338,11 @@ const AuthenticatedAdminRouteWithChildren =
   AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAccesoRoute: typeof AuthenticatedAccesoRoute
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedBloqueosRoute: typeof AuthenticatedBloqueosRoute
   AuthenticatedInicioRoute: typeof AuthenticatedInicioRoute
+  AuthenticatedOperacionesRoute: typeof AuthenticatedOperacionesRoute
   AuthenticatedMisReservasIdRoute: typeof AuthenticatedMisReservasIdRoute
   AuthenticatedMisReservasNuevaRoute: typeof AuthenticatedMisReservasNuevaRoute
   AuthenticatedReservasIdRoute: typeof AuthenticatedReservasIdRoute
@@ -310,9 +351,11 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAccesoRoute: AuthenticatedAccesoRoute,
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedBloqueosRoute: AuthenticatedBloqueosRoute,
   AuthenticatedInicioRoute: AuthenticatedInicioRoute,
+  AuthenticatedOperacionesRoute: AuthenticatedOperacionesRoute,
   AuthenticatedMisReservasIdRoute: AuthenticatedMisReservasIdRoute,
   AuthenticatedMisReservasNuevaRoute: AuthenticatedMisReservasNuevaRoute,
   AuthenticatedReservasIdRoute: AuthenticatedReservasIdRoute,
