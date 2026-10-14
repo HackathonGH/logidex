@@ -24,7 +24,7 @@ export const Route = createFileRoute("/_authenticated/bloqueos")({
         <Tabs defaultValue="blocks">
           <TabsListI18n />
           <TabsContent value="blocks"><BlocksTab /></TabsContent>
-          <TabsContent value="capacity"><CapacityTab /></TabsContent>
+          <TabsContent value="capacity"><CapacityTab isAdmin={isAdmin} /></TabsContent>
           <TabsContent value="holidays"><HolidaysTab isAdmin={isAdmin} /></TabsContent>
           <TabsContent value="calendar"><CalendarTab /></TabsContent>
         </Tabs>
@@ -208,7 +208,7 @@ function DateTime({ label, date, time, onChange }: { label: string; date: string
 /* ---------------- Capacity ---------------- */
 const minToHHMM = (m: number) => `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}`;
 
-function CapacityTab() {
+function CapacityTab({ isAdmin }: { isAdmin: boolean }) {
   const { t } = useI18n();
   const qc = useQueryClient();
   const shifts = useQuery({ queryKey: ["shifts"], queryFn: async () => (await supabase.from("shifts").select("*").order("sort")).data ?? [] });
@@ -237,6 +237,8 @@ function CapacityTab() {
   }
 
   return (
+    <fieldset disabled={!isAdmin} className="space-y-4">
+    {!isAdmin && <p className="rounded-md bg-muted p-3 text-sm text-muted-foreground">{t("capacityAdminOnly")}</p>}
     <div className="grid gap-6 lg:grid-cols-2">
       <section className="space-y-3 rounded-xl border border-border bg-card p-5">
         <h2 className="font-display font-semibold">{t("defaultMax")}</h2>
@@ -258,7 +260,7 @@ function CapacityTab() {
           <div className="space-y-1"><Label className="text-xs">{t("date")}</Label><Input type="date" value={ov.date} onChange={(e) => setOv({ ...ov, date: e.target.value })} /></div>
           <div className="space-y-1">
             <Label className="text-xs">{t("shift")}</Label>
-            <Select value={ov.shift} onValueChange={(v) => setOv({ ...ov, shift: v })}>
+            <Select value={ov.shift} onValueChange={(v) => setOv({ ...ov, shift: v })} disabled={!isAdmin}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>{shifts.data?.map((s) => <SelectItem key={s.code} value={s.code}>{t(`sh_${s.code}` as TKey)}</SelectItem>)}</SelectContent>
             </Select>
@@ -277,6 +279,7 @@ function CapacityTab() {
         ))}
       </section>
     </div>
+    </fieldset>
   );
 }
 

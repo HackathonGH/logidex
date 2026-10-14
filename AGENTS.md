@@ -16,3 +16,4 @@
 - Signed-in pages live under src/routes/_authenticated (client-only gate); the welcome/login page is the public index.
 - Capacity rules (15-min slots, max 2 simultaneous, free docks, blocks, closed holidays, shift pallets) live only in the SQL function check_capacity, called by every RPC that writes reservations, so the rule can't be bypassed or drift; src/lib/reservations.ts only mirrors format checks for UI feedback.
 - Reservation wall-clock times are Europe/Madrid; RPCs take local date+time and convert in SQL, display uses Intl with timeZone Europe/Madrid.
+- Carrier booking writes go only through carrier_* SQL functions (company derived from caller via carrier_company()), so carriers can never act on another company's reservations.

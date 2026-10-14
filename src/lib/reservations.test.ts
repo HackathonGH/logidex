@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { durationForPallets, validateOrders, madridToISO, toMadrid, errorCode } from "./reservations";
+import { durationForPallets, validateOrders, madridToISO, toMadrid, errorCode, meetsAdvance, isLateCancel } from "./reservations";
 
 describe("duration by pallets", () => {
   it("follows the PRD table", () => {
@@ -34,4 +34,12 @@ describe("Madrid time", () => {
     expect(errorCode("ERR_SHIFT_FULL")).toBe("ERR_SHIFT_FULL");
     expect(errorCode("forbidden")).toBe("ERR_FORBIDDEN");
   });
+});
+
+describe("24h carrier rule", () => {
+  const now = new Date("2026-10-14T10:00:00Z");
+  it("exactly 24 hours is allowed", () => expect(meetsAdvance("2026-10-15T10:00:00Z", now)).toBe(true));
+  it("less than 24 hours is blocked", () => expect(meetsAdvance("2026-10-15T09:45:00Z", now)).toBe(false));
+  it("cancel under 24h is subject to penalty", () => expect(isLateCancel("2026-10-15T09:00:00Z", now)).toBe(true));
+  it("cancel with 24h or more has no penalty", () => expect(isLateCancel("2026-10-15T10:00:00Z", now)).toBe(false));
 });

@@ -6,7 +6,7 @@ export const ROLES: AppRole[] = ["admin", "administrativo", "transportista"];
 /** Roles an admin can assign when creating an account from the Users screen. */
 export const ASSIGNABLE_ROLES: AppRole[] = ["admin", "administrativo", "transportista"];
 
-export type MenuItem = { key: TKey; to?: "/admin" | "/reservas" | "/bloqueos" };
+export type MenuItem = { key: TKey; to?: "/admin" | "/reservas" | "/bloqueos" | "/mis-reservas" };
 
 /** Menu entries each role may see. */
 export function menuForRoles(roles: AppRole[], canScan = false): MenuItem[] {
@@ -14,7 +14,7 @@ export function menuForRoles(roles: AppRole[], canScan = false): MenuItem[] {
   const has = (r: AppRole) => roles.includes(r);
   if (has("admin")) items.push({ key: "menu_admin", to: "/admin" });
   if (has("admin") || has("administrativo")) items.push({ key: "menu_reservations", to: "/reservas" }, { key: "menu_blocks", to: "/bloqueos" });
-  if (has("transportista")) items.push({ key: "menu_book" });
+  if (has("transportista")) items.push({ key: "menu_book", to: "/mis-reservas" });
   if (canScan && !has("transportista")) items.push({ key: "menu_scan" });
   return items;
 }

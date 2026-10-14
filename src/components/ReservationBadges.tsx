@@ -1,8 +1,8 @@
-import { CalendarClock, CheckCircle2, XCircle } from "lucide-react";
+import { AlertTriangle, CalendarClock, CheckCircle2, XCircle } from "lucide-react";
 import { useI18n, type TKey } from "@/lib/i18n";
 import { Badge } from "@/components/ui/badge";
 
-export function StatusBadges({ status, rescheduled }: { status: string; rescheduled: boolean }) {
+export function StatusBadges({ status, rescheduled, penalty = false }: { status: string; rescheduled: boolean; penalty?: boolean }) {
   const { t } = useI18n();
   const cancelled = status === "cancelled" || status === "no_show";
   return (
@@ -14,6 +14,11 @@ export function StatusBadges({ status, rescheduled }: { status: string; reschedu
       {rescheduled && !cancelled && (
         <Badge variant="outline" className="border-warning/50 text-warning-foreground bg-warning/20">
           <CalendarClock className="mr-1 h-3 w-3" />{t("rescheduled")}
+        </Badge>
+      )}
+      {penalty && (
+        <Badge variant="outline" className="border-destructive/40 bg-destructive/10 text-destructive">
+          <AlertTriangle className="mr-1 h-3 w-3" />{t("penalty")}
         </Badge>
       )}
     </div>
