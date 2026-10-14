@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { durationForPallets, validateOrders, madridToISO, toMadrid, errorCode } from "./reservations";
+import { durationForPallets, validateOrders, madridToISO, toMadrid, errorCode, meetsAdvance, isLateCancel } from "./reservations";
 
 describe("duration by pallets", () => {
   it("follows the PRD table", () => {
