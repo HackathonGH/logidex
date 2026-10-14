@@ -1,8 +1,10 @@
 import type { TKey } from "./i18n";
 
-export type AppRole = "admin" | "administrativo" | "transportista" | "bascula" | "almacen";
-export const ROLES: AppRole[] = ["admin", "administrativo", "transportista", "bascula", "almacen"];
-export const INTERNAL_ROLES: AppRole[] = ["admin", "administrativo", "bascula", "almacen"];
+/** Product roles defined in the PRD: administrador, administrativo, transportista. */
+export type AppRole = "admin" | "administrativo" | "transportista";
+export const ROLES: AppRole[] = ["admin", "administrativo", "transportista"];
+/** Roles an admin can assign when creating an account from the Users screen. */
+export const ASSIGNABLE_ROLES: AppRole[] = ["admin", "administrativo", "transportista"];
 
 export type MenuItem = { key: TKey; to?: "/admin" };
 
@@ -13,8 +15,6 @@ export function menuForRoles(roles: AppRole[], canScan = false): MenuItem[] {
   if (has("admin")) items.push({ key: "menu_admin", to: "/admin" });
   if (has("admin") || has("administrativo")) items.push({ key: "menu_reservations" }, { key: "menu_blocks" });
   if (has("transportista")) items.push({ key: "menu_book" });
-  if (has("bascula")) items.push({ key: "menu_weighbridge" });
-  if (has("almacen")) items.push({ key: "menu_warehouse" });
   if (canScan && !has("transportista")) items.push({ key: "menu_scan" });
   return items;
 }

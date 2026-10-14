@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { usernameToEmail, INTERNAL_ROLES, type AppRole } from "./roles";
+import { usernameToEmail, ASSIGNABLE_ROLES, type AppRole } from "./roles";
 
 type NewUser = { username: string; password: string; fullName: string; role: AppRole };
 
@@ -9,7 +9,7 @@ export const createInternalUser = createServerFn({ method: "POST" })
   .inputValidator((d: NewUser) => {
     if (!/^[A-Za-z0-9._-]{3,30}$/.test(d.username)) throw new Error("Usuario no válido (3-30 caracteres, sin espacios)");
     if (!d.password || d.password.length < 8) throw new Error("La contraseña debe tener al menos 8 caracteres");
-    if (!INTERNAL_ROLES.includes(d.role)) throw new Error("Rol no válido");
+    if (!ASSIGNABLE_ROLES.includes(d.role)) throw new Error("Rol no válido");
     return d;
   })
   .handler(async ({ data, context }) => {
