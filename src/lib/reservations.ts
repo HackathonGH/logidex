@@ -91,3 +91,22 @@ export function minutesBetween(a?: string | null, b?: string | null): number | n
 export function nextAction(status: string): "start" | "end" | "release" | "depart" | null {
   return ({ on_site: "start", unloading: "end", unloaded: "release", dock_released: "depart" } as const)[status as "on_site"] ?? null;
 }
+
+export type Goods = { presented: number | null; accepted: number | null; rejected: number | null; missing: number | null; reason: string };
+/** UI mirror of staff_reconcile_order checks; SQL is authoritative. Missing is never inferred. */
+export function checkGoods(g: Goods, complete: boolean): string | null {
+  const vals = [g.presented, g.accepted, g.rejected, g.missing];
+  if (vals.some((v) => v != null && v < 0)) return "ERR_GOODS_NEGATIVE";
+  if (g.presented != null && (g.accepted ?? 0) + (g.rejected ?? 0) > g.presented) return "ERR_GOODS_OVER_PRESENTED";
+  if ((g.rejected ?? 0) > 0 && !g.reason.trim()) return "ERR_REJECT_REASON";
+  if (complete) {
+    if (vals.some((v) => v == null)) return "ERR_GOODS_INCOMPLETE";
+    if (g.accepted! + g.rejected! !== g.presented) return "ERR_GOODS_SUM";
+  }
+  return null;
+}
+
+export const INCIDENT_FILE_MAX = 10 * 1024 * 1024;
+export function incidentFileOk(f: { type: string; size: number }): boolean {
+  return (f.type.startsWith("image/") || f.type === "application/pdf") && f.size <= INCIDENT_FILE_MAX;
+}

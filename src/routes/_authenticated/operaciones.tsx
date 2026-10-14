@@ -8,6 +8,7 @@ import type { Tables } from "@/integrations/supabase/types";
 import { useI18n, type TKey } from "@/lib/i18n";
 import { toMadrid, madridToISO, fmtTime, errorCode, minutesBetween, nextAction } from "@/lib/reservations";
 import { StaffPage } from "@/components/StaffPage";
+import { GoodsPanel, IncidentsPanel } from "@/components/GoodsIncidents";
 import { StatusBadges } from "@/components/ReservationBadges";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -88,10 +89,6 @@ function Detail({ r }: { r: Row }) {
     enabled: canDock,
     queryFn: async () => { const { data, error } = await supabase.rpc("free_docks", { _id: r.id }); if (error) throw error; return (data ?? []) as number[]; },
   });
-  const orders = useQuery({
-    queryKey: ["ops-orders", r.id],
-    queryFn: async () => (await supabase.from("reservation_orders").select("order_number, supplier, pallets").eq("reservation_id", r.id).order("order_number")).data ?? [],
-  });
   const done = () => { qc.invalidateQueries({ queryKey: ["ops"] }); qc.invalidateQueries({ queryKey: ["free-docks"] }); };
   async function run(fn: () => PromiseLike<{ error: { message: string } | null }>) {
     setBusy(true); const { error } = await fn(); setBusy(false);
@@ -113,10 +110,8 @@ function Detail({ r }: { r: Row }) {
         <dt className="text-muted-foreground">{t("pallets")}</dt><dd>{r.total_pallets}</dd>
       </dl>
 
-      <section className="space-y-1 text-sm">
-        <h3 className="font-display font-semibold">{t("orders")}</h3>
-        {orders.data?.map((o) => <div key={o.order_number} className="flex justify-between"><span>{o.order_number} · {o.supplier}</span><strong>{o.pallets}</strong></div>)}
-      </section>
+      <GoodsPanel reservationId={r.id} status={r.status} />
+      <IncidentsPanel reservationId={r.id} />
 
       <section className="grid grid-cols-2 gap-2 text-sm">
         {([["scheduled", r.starts_at], ["arrived", r.arrived_at], ["unloadStart", r.unload_started_at], ["unloadEnd", r.unload_ended_at], ["released", r.dock_released_at], ["departed", r.departed_at]] as const).map(([k, v]) => (
