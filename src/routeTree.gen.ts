@@ -15,6 +15,7 @@ import { Route as AuthenticatedAccesoRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedBloqueosRouteImport } from './routes/_authenticated/bloqueos'
 import { Route as AuthenticatedInicioRouteImport } from './routes/_authenticated/inicio'
+import { Route as AuthenticatedOperacionesRouteImport } from './routes/_authenticated/operaciones'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedAdminAjustesRouteImport } from './routes/_authenticated/admin.ajustes'
 import { Route as AuthenticatedAdminUsuariosRouteImport } from './routes/_authenticated/admin.usuarios'
@@ -53,6 +54,12 @@ const AuthenticatedInicioRoute = AuthenticatedInicioRouteImport.update({
   path: '/inicio',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedOperacionesRoute =
+  AuthenticatedOperacionesRouteImport.update({
+    id: '/operaciones',
+    path: '/operaciones',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -106,6 +113,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/bloqueos': typeof AuthenticatedBloqueosRoute
   '/inicio': typeof AuthenticatedInicioRoute
+  '/operaciones': typeof AuthenticatedOperacionesRoute
   '/admin/ajustes': typeof AuthenticatedAdminAjustesRoute
   '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
   '/mis-reservas/$id': typeof AuthenticatedMisReservasIdRoute
@@ -120,6 +128,7 @@ export interface FileRoutesByTo {
   '/acceso': typeof AuthenticatedAccesoRoute
   '/bloqueos': typeof AuthenticatedBloqueosRoute
   '/inicio': typeof AuthenticatedInicioRoute
+  '/operaciones': typeof AuthenticatedOperacionesRoute
   '/admin/ajustes': typeof AuthenticatedAdminAjustesRoute
   '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
   '/mis-reservas/$id': typeof AuthenticatedMisReservasIdRoute
@@ -137,6 +146,7 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/bloqueos': typeof AuthenticatedBloqueosRoute
   '/_authenticated/inicio': typeof AuthenticatedInicioRoute
+  '/_authenticated/operaciones': typeof AuthenticatedOperacionesRoute
   '/_authenticated/admin/ajustes': typeof AuthenticatedAdminAjustesRoute
   '/_authenticated/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
   '/_authenticated/mis-reservas/$id': typeof AuthenticatedMisReservasIdRoute
@@ -154,6 +164,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/bloqueos'
     | '/inicio'
+    | '/operaciones'
     | '/admin/ajustes'
     | '/admin/usuarios'
     | '/mis-reservas/$id'
@@ -168,6 +179,7 @@ export interface FileRouteTypes {
     | '/acceso'
     | '/bloqueos'
     | '/inicio'
+    | '/operaciones'
     | '/admin/ajustes'
     | '/admin/usuarios'
     | '/mis-reservas/$id'
@@ -184,6 +196,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/_authenticated/bloqueos'
     | '/_authenticated/inicio'
+    | '/_authenticated/operaciones'
     | '/_authenticated/admin/ajustes'
     | '/_authenticated/admin/usuarios'
     | '/_authenticated/mis-reservas/$id'
@@ -241,6 +254,13 @@ declare module '@tanstack/react-router' {
       path: '/inicio'
       fullPath: '/inicio'
       preLoaderRoute: typeof AuthenticatedInicioRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/operaciones': {
+      id: '/_authenticated/operaciones'
+      path: '/operaciones'
+      fullPath: '/operaciones'
+      preLoaderRoute: typeof AuthenticatedOperacionesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/admin/': {
@@ -322,6 +342,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedBloqueosRoute: typeof AuthenticatedBloqueosRoute
   AuthenticatedInicioRoute: typeof AuthenticatedInicioRoute
+  AuthenticatedOperacionesRoute: typeof AuthenticatedOperacionesRoute
   AuthenticatedMisReservasIdRoute: typeof AuthenticatedMisReservasIdRoute
   AuthenticatedMisReservasNuevaRoute: typeof AuthenticatedMisReservasNuevaRoute
   AuthenticatedReservasIdRoute: typeof AuthenticatedReservasIdRoute
@@ -334,6 +355,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedBloqueosRoute: AuthenticatedBloqueosRoute,
   AuthenticatedInicioRoute: AuthenticatedInicioRoute,
+  AuthenticatedOperacionesRoute: AuthenticatedOperacionesRoute,
   AuthenticatedMisReservasIdRoute: AuthenticatedMisReservasIdRoute,
   AuthenticatedMisReservasNuevaRoute: AuthenticatedMisReservasNuevaRoute,
   AuthenticatedReservasIdRoute: AuthenticatedReservasIdRoute,

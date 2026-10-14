@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { ChevronLeft, ChevronRight, Pencil } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import type { Tables } from "@/integrations/supabase/types";
 import { useI18n, type TKey } from "@/lib/i18n";
 import { toMadrid, madridToISO, fmtTime, errorCode, minutesBetween, nextAction } from "@/lib/reservations";
 import { StaffPage } from "@/components/StaffPage";
@@ -75,8 +76,7 @@ function Board() {
   );
 }
 
-type Row = NonNullable<ReturnType<typeof useBoardRow>>;
-function useBoardRow() { return null as unknown as { id: string; code: string; status: string; starts_at: string; ends_at: string; dock_id: number | null; arrived_at: string | null; unload_started_at: string | null; unload_ended_at: string | null; dock_released_at: string | null; departed_at: string | null; driver_name: string; driver_doc: string | null; tractor_plate: string; trailer_plate: string | null; total_pallets: number; rescheduled: boolean; penalty: boolean; companies: { name: string } | null }; }
+type Row = Tables<"reservations"> & { companies: { name: string } | null };
 
 function Detail({ r }: { r: Row }) {
   const { t } = useI18n();
