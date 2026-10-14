@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { LangSwitcher, useI18n } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 
-export function AppShell({ children, name }: { children: ReactNode; name?: string | null }) {
+export function AppShell({ children, name }: { children: ReactNode; name?: string | null | undefined }) {
   const { t } = useI18n();
   const qc = useQueryClient();
   const navigate = useNavigate();
@@ -39,7 +39,7 @@ export function AppShell({ children, name }: { children: ReactNode; name?: strin
   );
 }
 
-export function ContactCard({ phone, email }: { phone?: string; email?: string }) {
+export function ContactCard({ phone, email }: { phone?: string | undefined; email?: string | undefined }) {
   const { t } = useI18n();
   return (
     <div className="rounded-lg border border-border bg-muted/50 p-4 text-sm">

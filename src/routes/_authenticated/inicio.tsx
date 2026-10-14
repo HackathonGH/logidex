@@ -92,7 +92,7 @@ function Onboarding({ rejected }: { rejected: boolean }) {
     setBusy(true);
     const { error } = await supabase.rpc("submit_company_registration", { _name: f.name, _tax_id: f.tax, _phone: f.phone });
     setBusy(false);
-    if (error) return toast.error(t("error"));
+    if (error) { toast.error(t("error")); return; }
     qc.invalidateQueries({ queryKey: ["me"] });
   }
   return (
@@ -116,9 +116,9 @@ function ChangePassword() {
   const [pwd, setPwd] = useState("");
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (pwd.length < 8) return toast.error(t("changePwdText"));
+    if (pwd.length < 8) { toast.error(t("changePwdText")); return; }
     const { error } = await supabase.auth.updateUser({ password: pwd, current_password: cur } as never);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     await supabase.rpc("complete_password_change");
     toast.success(t("saved"));
     qc.invalidateQueries({ queryKey: ["me"] });
