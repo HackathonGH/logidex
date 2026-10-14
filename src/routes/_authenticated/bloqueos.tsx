@@ -68,18 +68,18 @@ function BlocksTab() {
   }
   async function check() {
     if (!form) return;
-    if (!form.reason.trim()) return toast.error(t("ERR_REASON"));
+    if (!form.reason.trim()) { toast.error(t("ERR_REASON")); return; }
     const p = payload(form);
-    if (p._end <= p._start) return toast.error(t("ERR_RANGE"));
+    if (p._end <= p._start) { toast.error(t("ERR_RANGE")); return; }
     const { data, error } = await supabase.rpc("block_affected", p as never);
-    if (error) return fail(t, error.message);
+    if (error) { fail(t, error.message); return; }
     if (data?.length) setAffected(data);
     else await persist();
   }
   async function persist() {
     if (!form) return;
     const { error } = await supabase.rpc("admin_save_block", { _id: form.id, _kind: form.kind, _reason: form.reason, ...payload(form) } as never);
-    if (error) return fail(t, error.message);
+    if (error) { fail(t, error.message); return; }
     toast.success(t("saved"));
     setAffected(null);
     setForm(null);
@@ -88,7 +88,7 @@ function BlocksTab() {
   }
   async function remove(id: string) {
     const { error } = await supabase.rpc("admin_delete_block", { _id: id });
-    if (error) return fail(t, error.message);
+    if (error) { fail(t, error.message); return; }
     qc.invalidateQueries({ queryKey: ["blocks"] });
     qc.invalidateQueries({ queryKey: ["calendar"] });
   }
@@ -222,16 +222,16 @@ function CapacityTab() {
 
   async function saveDefault(code: string) {
     const v = Number(defs[code]);
-    if (!Number.isInteger(v) || v < 0) return toast.error(t("ERR_PALLETS"));
+    if (!Number.isInteger(v) || v < 0) { toast.error(t("ERR_PALLETS")); return; }
     const { error } = await supabase.rpc("admin_set_shift_default", { _code: code, _max: v });
-    if (error) return fail(t, error.message);
+    if (error) { fail(t, error.message); return; }
     toast.success(t("saved"));
     setDefs((d) => { const n = { ...d }; delete n[code]; return n; });
     refresh();
   }
   async function setOverride(date: string, code: string, max: number | null) {
     const { error } = await supabase.rpc("admin_set_capacity_override", { _date: date, _code: code, _max: max as number });
-    if (error) return fail(t, error.message);
+    if (error) { fail(t, error.message); return; }
     toast.success(t("saved"));
     refresh();
   }
@@ -287,7 +287,7 @@ function HolidaysTab({ isAdmin }: { isAdmin: boolean }) {
   const q = useQuery({ queryKey: ["holidays"], queryFn: async () => (await supabase.from("holidays").select("*").order("day")).data ?? [] });
   async function toggle(day: string, open: boolean) {
     const { error } = await supabase.rpc("admin_set_holiday_open", { _day: day, _open: open });
-    if (error) return fail(t, error.message);
+    if (error) { fail(t, error.message); return; }
     qc.invalidateQueries({ queryKey: ["holidays"] });
     qc.invalidateQueries({ queryKey: ["calendar"] });
   }
