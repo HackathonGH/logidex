@@ -195,6 +195,63 @@ export type Database = {
         }
         Relationships: []
       }
+      incidents: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string
+          id: string
+          order_id: string | null
+          reservation_id: string
+          resolved_at: string | null
+          resolved_by: string | null
+          severity: string
+          status: string
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description: string
+          id?: string
+          order_id?: string | null
+          reservation_id: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          severity?: string
+          status?: string
+          type: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          id?: string
+          order_id?: string | null
+          reservation_id?: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          severity?: string
+          status?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "incidents_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "reservation_orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "incidents_reservation_id_fkey"
+            columns: ["reservation_id"]
+            isOneToOne: false
+            referencedRelation: "reservations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           can_scan_qr: boolean
@@ -285,6 +342,13 @@ export type Database = {
           id: string
           order_number: string
           pallets: number
+          pallets_accepted: number | null
+          pallets_missing: number | null
+          pallets_presented: number | null
+          pallets_rejected: number | null
+          reconciliation_status: string
+          reject_destination: string | null
+          reject_reason: string | null
           reservation_id: string
           supplier: string
         }
@@ -292,6 +356,13 @@ export type Database = {
           id?: string
           order_number: string
           pallets: number
+          pallets_accepted?: number | null
+          pallets_missing?: number | null
+          pallets_presented?: number | null
+          pallets_rejected?: number | null
+          reconciliation_status?: string
+          reject_destination?: string | null
+          reject_reason?: string | null
           reservation_id: string
           supplier: string
         }
@@ -299,6 +370,13 @@ export type Database = {
           id?: string
           order_number?: string
           pallets?: number
+          pallets_accepted?: number | null
+          pallets_missing?: number | null
+          pallets_presented?: number | null
+          pallets_rejected?: number | null
+          reconciliation_status?: string
+          reject_destination?: string | null
+          reject_reason?: string | null
           reservation_id?: string
           supplier?: string
         }
@@ -666,6 +744,33 @@ export type Database = {
       }
       staff_assign_dock: {
         Args: { _dock: number; _id: string }
+        Returns: undefined
+      }
+      staff_create_incident: {
+        Args: {
+          _description: string
+          _order: string
+          _reservation: string
+          _severity: string
+          _type: string
+        }
+        Returns: string
+      }
+      staff_reconcile_order: {
+        Args: {
+          _accepted: number
+          _complete: boolean
+          _destination: string
+          _missing: number
+          _order: string
+          _presented: number
+          _reason: string
+          _rejected: number
+        }
+        Returns: undefined
+      }
+      staff_set_incident_status: {
+        Args: { _id: string; _status: string }
         Returns: undefined
       }
       submit_company_registration: {
