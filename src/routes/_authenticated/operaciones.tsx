@@ -123,7 +123,7 @@ function Detail({ r }: { r: Row }) {
           <div key={k} className="rounded-md border border-border p-2"><div className="text-xs text-muted-foreground">{t(k)}</div><div className="font-medium">{fmt(v)}</div></div>
         ))}
         <div className="col-span-2 grid grid-cols-2 gap-2 text-xs text-muted-foreground">
-          <span>{t("delayMin")}: {mins(r.starts_at, r.arrived_at)}</span>
+          <span>{t("delayMin")}: {r.arrived_at ? `${Math.max(0, minutesBetween(r.starts_at, r.arrived_at) ?? 0)} ${t("minutes")}` : "—"}</span>
           <span>{t("waitMin")}: {mins(r.arrived_at, r.unload_started_at)}</span>
           <span>{t("unloadMin")}: {mins(r.unload_started_at, r.unload_ended_at)}</span>
           <span>{t("stayMin")}: {mins(r.arrived_at, r.departed_at)}</span>
