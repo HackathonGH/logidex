@@ -39,8 +39,6 @@ const dict = {
   menu_reservations: { es: "Reservas", en: "Reservations", ca: "Reserves" },
   menu_blocks: { es: "Bloqueos y capacidad", en: "Blocks & capacity", ca: "Bloquejos i capacitat" },
   menu_book: { es: "Mis reservas", en: "My bookings", ca: "Les meves reserves" },
-  menu_weighbridge: { es: "Báscula", en: "Weighbridge", ca: "Bàscula" },
-  menu_warehouse: { es: "Almacén", en: "Warehouse", ca: "Magatzem" },
   menu_scan: { es: "Escanear QR", en: "Scan QR", ca: "Escaneja QR" },
   comingSoon: { es: "Disponible en la siguiente fase", en: "Available in the next phase", ca: "Disponible a la propera fase" },
   requests: { es: "Solicitudes", en: "Requests", ca: "Sol·licituds" },
