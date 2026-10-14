@@ -338,13 +338,13 @@ function CalendarTab() {
   const byDay = new Map<string, NonNullable<typeof q.data>>();
   q.data?.forEach((r) => byDay.set(r.day, [...(byDay.get(r.day) ?? []), r]));
   const weekdays = Array.from({ length: 7 }, (_, i) => new Intl.DateTimeFormat(lang, { weekday: "short", timeZone: "UTC" }).format(new Date(Date.UTC(2026, 0, 5 + i))));
-  const title = new Intl.DateTimeFormat(lang, { month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(first + "T00:00:00Z"));
+  const title = new Intl.DateTimeFormat(lang, { month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(first + "T00:00:00Z")).replace(/^./, (c) => c.toUpperCase());
 
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2">
         <Button size="icon" variant="outline" aria-label={t("prev")} onClick={() => shift(-1)}><ChevronLeft className="h-4 w-4" /></Button>
-        <div className="min-w-40 text-center font-display font-semibold capitalize">{title}</div>
+        <div className="min-w-40 text-center font-display font-semibold">{title}</div>
         <Button size="icon" variant="outline" aria-label={t("next")} onClick={() => shift(1)}><ChevronRight className="h-4 w-4" /></Button>
       </div>
       <div className="grid grid-cols-7 gap-1 text-xs">
