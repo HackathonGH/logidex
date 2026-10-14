@@ -35,3 +35,11 @@ describe("Madrid time", () => {
     expect(errorCode("forbidden")).toBe("ERR_FORBIDDEN");
   });
 });
+
+describe("24h carrier rule", () => {
+  const now = new Date("2026-10-14T10:00:00Z");
+  it("exactly 24 hours is allowed", () => expect(meetsAdvance("2026-10-15T10:00:00Z", now)).toBe(true));
+  it("less than 24 hours is blocked", () => expect(meetsAdvance("2026-10-15T09:45:00Z", now)).toBe(false));
+  it("cancel under 24h is subject to penalty", () => expect(isLateCancel("2026-10-15T09:00:00Z", now)).toBe(true));
+  it("cancel with 24h or more has no penalty", () => expect(isLateCancel("2026-10-15T10:00:00Z", now)).toBe(false));
+});

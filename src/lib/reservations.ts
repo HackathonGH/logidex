@@ -70,3 +70,13 @@ export function errorCode(msg: string | undefined): string {
   if (msg?.includes("forbidden")) return "ERR_FORBIDDEN";
   return "ERR_UNKNOWN";
 }
+
+/** Carriers must book at least 24 h before start; exactly 24 h is allowed. */
+export function meetsAdvance(startISO: string, now: Date = new Date()): boolean {
+  return new Date(startISO).getTime() - now.getTime() >= 24 * 60 * 60 * 1000;
+}
+
+/** Carrier cancellation under 24 h before start is flagged as subject to penalty. */
+export function isLateCancel(startISO: string, now: Date = new Date()): boolean {
+  return !meetsAdvance(startISO, now);
+}
