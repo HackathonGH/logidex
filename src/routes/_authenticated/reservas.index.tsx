@@ -97,7 +97,7 @@ function ReservationList() {
                 <TableCell>{r.total_pallets}</TableCell>
                 <TableCell className="text-sm">{r.driver_name}</TableCell>
                 <TableCell className="text-sm">{r.tractor_plate}{r.trailer_plate ? ` / ${r.trailer_plate}` : ""}</TableCell>
-                <TableCell><StatusBadges status={r.status} rescheduled={r.rescheduled} /></TableCell>
+                <TableCell><StatusBadges status={r.status} rescheduled={r.rescheduled} penalty={r.penalty} /></TableCell>
               </TableRow>
             ))}
           </TableBody>

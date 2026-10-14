@@ -17,6 +17,9 @@ import { Route as AuthenticatedInicioRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedAdminAjustesRouteImport } from './routes/_authenticated/admin.ajustes'
 import { Route as AuthenticatedAdminUsuariosRouteImport } from './routes/_authenticated/admin.usuarios'
+import { Route as AuthenticatedMisReservasIndexRouteImport } from './routes/_authenticated/mis-reservas.index'
+import { Route as AuthenticatedMisReservasIdRouteImport } from './routes/_authenticated/mis-reservas.$id'
+import { Route as AuthenticatedMisReservasNuevaRouteImport } from './routes/_authenticated/mis-reservas.nueva'
 import { Route as AuthenticatedReservasIndexRouteImport } from './routes/_authenticated/reservas.index'
 import { Route as AuthenticatedReservasIdRouteImport } from './routes/_authenticated/reservas.$id'
 
@@ -61,6 +64,24 @@ const AuthenticatedAdminUsuariosRoute =
     path: '/usuarios',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedMisReservasIndexRoute =
+  AuthenticatedMisReservasIndexRouteImport.update({
+    id: '/mis-reservas/',
+    path: '/mis-reservas/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedMisReservasIdRoute =
+  AuthenticatedMisReservasIdRouteImport.update({
+    id: '/mis-reservas/$id',
+    path: '/mis-reservas/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedMisReservasNuevaRoute =
+  AuthenticatedMisReservasNuevaRouteImport.update({
+    id: '/mis-reservas/nueva',
+    path: '/mis-reservas/nueva',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedReservasIndexRoute =
   AuthenticatedReservasIndexRouteImport.update({
     id: '/reservas/',
@@ -80,8 +101,11 @@ export interface FileRoutesByFullPath {
   '/inicio': typeof AuthenticatedInicioRoute
   '/admin/ajustes': typeof AuthenticatedAdminAjustesRoute
   '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
+  '/mis-reservas/$id': typeof AuthenticatedMisReservasIdRoute
+  '/mis-reservas/nueva': typeof AuthenticatedMisReservasNuevaRoute
   '/reservas/$id': typeof AuthenticatedReservasIdRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/mis-reservas/': typeof AuthenticatedMisReservasIndexRoute
   '/reservas/': typeof AuthenticatedReservasIndexRoute
 }
 export interface FileRoutesByTo {
@@ -90,8 +114,11 @@ export interface FileRoutesByTo {
   '/inicio': typeof AuthenticatedInicioRoute
   '/admin/ajustes': typeof AuthenticatedAdminAjustesRoute
   '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
+  '/mis-reservas/$id': typeof AuthenticatedMisReservasIdRoute
+  '/mis-reservas/nueva': typeof AuthenticatedMisReservasNuevaRoute
   '/reservas/$id': typeof AuthenticatedReservasIdRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
+  '/mis-reservas': typeof AuthenticatedMisReservasIndexRoute
   '/reservas': typeof AuthenticatedReservasIndexRoute
 }
 export interface FileRoutesById {
@@ -103,8 +130,11 @@ export interface FileRoutesById {
   '/_authenticated/inicio': typeof AuthenticatedInicioRoute
   '/_authenticated/admin/ajustes': typeof AuthenticatedAdminAjustesRoute
   '/_authenticated/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
+  '/_authenticated/mis-reservas/$id': typeof AuthenticatedMisReservasIdRoute
+  '/_authenticated/mis-reservas/nueva': typeof AuthenticatedMisReservasNuevaRoute
   '/_authenticated/reservas/$id': typeof AuthenticatedReservasIdRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/_authenticated/mis-reservas/': typeof AuthenticatedMisReservasIndexRoute
   '/_authenticated/reservas/': typeof AuthenticatedReservasIndexRoute
 }
 export interface FileRouteTypes {
@@ -116,8 +146,11 @@ export interface FileRouteTypes {
     | '/inicio'
     | '/admin/ajustes'
     | '/admin/usuarios'
+    | '/mis-reservas/$id'
+    | '/mis-reservas/nueva'
     | '/reservas/$id'
     | '/admin/'
+    | '/mis-reservas/'
     | '/reservas/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -126,8 +159,11 @@ export interface FileRouteTypes {
     | '/inicio'
     | '/admin/ajustes'
     | '/admin/usuarios'
+    | '/mis-reservas/$id'
+    | '/mis-reservas/nueva'
     | '/reservas/$id'
     | '/admin'
+    | '/mis-reservas'
     | '/reservas'
   id:
     | '__root__'
@@ -138,8 +174,11 @@ export interface FileRouteTypes {
     | '/_authenticated/inicio'
     | '/_authenticated/admin/ajustes'
     | '/_authenticated/admin/usuarios'
+    | '/_authenticated/mis-reservas/$id'
+    | '/_authenticated/mis-reservas/nueva'
     | '/_authenticated/reservas/$id'
     | '/_authenticated/admin/'
+    | '/_authenticated/mis-reservas/'
     | '/_authenticated/reservas/'
   fileRoutesById: FileRoutesById
 }
@@ -206,6 +245,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminUsuariosRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/mis-reservas/': {
+      id: '/_authenticated/mis-reservas/'
+      path: '/mis-reservas'
+      fullPath: '/mis-reservas/'
+      preLoaderRoute: typeof AuthenticatedMisReservasIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/mis-reservas/$id': {
+      id: '/_authenticated/mis-reservas/$id'
+      path: '/mis-reservas/$id'
+      fullPath: '/mis-reservas/$id'
+      preLoaderRoute: typeof AuthenticatedMisReservasIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/mis-reservas/nueva': {
+      id: '/_authenticated/mis-reservas/nueva'
+      path: '/mis-reservas/nueva'
+      fullPath: '/mis-reservas/nueva'
+      preLoaderRoute: typeof AuthenticatedMisReservasNuevaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/reservas/': {
       id: '/_authenticated/reservas/'
       path: '/reservas'
@@ -242,7 +302,10 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedBloqueosRoute: typeof AuthenticatedBloqueosRoute
   AuthenticatedInicioRoute: typeof AuthenticatedInicioRoute
+  AuthenticatedMisReservasIdRoute: typeof AuthenticatedMisReservasIdRoute
+  AuthenticatedMisReservasNuevaRoute: typeof AuthenticatedMisReservasNuevaRoute
   AuthenticatedReservasIdRoute: typeof AuthenticatedReservasIdRoute
+  AuthenticatedMisReservasIndexRoute: typeof AuthenticatedMisReservasIndexRoute
   AuthenticatedReservasIndexRoute: typeof AuthenticatedReservasIndexRoute
 }
 
@@ -250,7 +313,10 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedBloqueosRoute: AuthenticatedBloqueosRoute,
   AuthenticatedInicioRoute: AuthenticatedInicioRoute,
+  AuthenticatedMisReservasIdRoute: AuthenticatedMisReservasIdRoute,
+  AuthenticatedMisReservasNuevaRoute: AuthenticatedMisReservasNuevaRoute,
   AuthenticatedReservasIdRoute: AuthenticatedReservasIdRoute,
+  AuthenticatedMisReservasIndexRoute: AuthenticatedMisReservasIndexRoute,
   AuthenticatedReservasIndexRoute: AuthenticatedReservasIndexRoute,
 }
 

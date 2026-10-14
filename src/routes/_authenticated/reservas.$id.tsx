@@ -93,7 +93,7 @@ function ReservationEditor() {
             <div className="font-display text-lg font-semibold">{r.code} · {r.companies?.name}</div>
             <div className="text-sm text-muted-foreground">{fmtDateTime(r.starts_at, lang)} – {fmtTime(r.ends_at)}</div>
           </div>
-          <StatusBadges status={r.status} rescheduled={r.rescheduled} />
+          <StatusBadges status={r.status} rescheduled={r.rescheduled} penalty={r.penalty} />
           {r.cancel_reason && <p className="w-full text-sm text-destructive">{t("reason")}: {r.cancel_reason}</p>}
         </div>
 
