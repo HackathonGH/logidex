@@ -10,7 +10,6 @@ import { createInternalUser } from "@/lib/admin.functions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -80,7 +79,6 @@ function Users() {
               <TableHead>{t("username")} / {t("email")}</TableHead>
               <TableHead>{t("role")}</TableHead>
               <TableHead>{t("status")}</TableHead>
-              <TableHead>{t("scanPerm")}</TableHead>
               <TableHead />
             </TableRow>
           </TableHeader>
