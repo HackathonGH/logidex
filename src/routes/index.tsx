@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ContactCard } from "@/components/AppShell";
 import { useSettings } from "@/hooks/use-me";
+import { bootstrapDemoAccounts } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -34,6 +35,10 @@ function Welcome() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    bootstrapDemoAccounts().catch(() => {});
+  }, []);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
