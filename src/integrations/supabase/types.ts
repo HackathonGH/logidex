@@ -252,6 +252,80 @@ export type Database = {
           },
         ]
       }
+      notification_reads: {
+        Row: {
+          notification_id: string
+          read_at: string
+          user_id: string
+        }
+        Insert: {
+          notification_id: string
+          read_at?: string
+          user_id: string
+        }
+        Update: {
+          notification_id?: string
+          read_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_reads_notification_id_fkey"
+            columns: ["notification_id"]
+            isOneToOne: false
+            referencedRelation: "notifications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          created_at: string
+          id: string
+          incident_id: string | null
+          kind: string
+          reservation_id: string
+          resolution: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          incident_id?: string | null
+          kind: string
+          reservation_id: string
+          resolution?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          incident_id?: string | null
+          kind?: string
+          reservation_id?: string
+          resolution?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_incident_id_fkey"
+            columns: ["incident_id"]
+            isOneToOne: false
+            referencedRelation: "incidents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_reservation_id_fkey"
+            columns: ["reservation_id"]
+            isOneToOne: false
+            referencedRelation: "reservations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           can_scan_qr: boolean
@@ -398,6 +472,7 @@ export type Database = {
           company_id: string
           created_at: string
           created_by: string | null
+          delay_alerted_at: string | null
           departed_at: string | null
           dock_id: number | null
           dock_released_at: string | null
@@ -427,6 +502,7 @@ export type Database = {
           company_id: string
           created_at?: string
           created_by?: string | null
+          delay_alerted_at?: string | null
           departed_at?: string | null
           dock_id?: number | null
           dock_released_at?: string | null
@@ -456,6 +532,7 @@ export type Database = {
           company_id?: string
           created_at?: string
           created_by?: string | null
+          delay_alerted_at?: string | null
           departed_at?: string | null
           dock_id?: number | null
           dock_released_at?: string | null
@@ -746,6 +823,10 @@ export type Database = {
         Args: { _dock: number; _id: string }
         Returns: undefined
       }
+      staff_available_slots: {
+        Args: { _date: string; _id: string }
+        Returns: string[]
+      }
       staff_create_incident: {
         Args: {
           _description: string
@@ -756,6 +837,8 @@ export type Database = {
         }
         Returns: string
       }
+      staff_detect_delays: { Args: never; Returns: number }
+      staff_keep_delayed: { Args: { _id: string }; Returns: undefined }
       staff_reconcile_order: {
         Args: {
           _accepted: number
@@ -767,6 +850,10 @@ export type Database = {
           _reason: string
           _rejected: number
         }
+        Returns: undefined
+      }
+      staff_reschedule: {
+        Args: { _date: string; _id: string; _time: string }
         Returns: undefined
       }
       staff_set_incident_status: {
