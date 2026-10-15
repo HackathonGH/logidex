@@ -199,6 +199,8 @@ const dict = {
   act_create: { es: "Creación", en: "Created", ca: "Creació" },
   ERR_ADVANCE: { es: "Se necesitan al menos 24 horas de antelación. Contacta con administración.", en: "At least 24 hours' notice is required. Contact the office.", ca: "Calen almenys 24 hores d'antelació. Contacta amb administració." },
   menu_operations: { es: "Agenda operativa", en: "Operations board", ca: "Agenda operativa" },
+  menu_incidents: { es: "Incidencias", en: "Incidents", ca: "Incidències" },
+  menu_reconcile: { es: "Conciliación de mercancía", en: "Goods reconciliation", ca: "Conciliació de mercaderia" },
   scanTitle: { es: "Escanea el QR del conductor", en: "Scan the driver's QR", ca: "Escaneja el QR del conductor" },
   manualCode: { es: "O introduce el código del QR", en: "Or type the QR code", ca: "O introdueix el codi del QR" },
   lookup: { es: "Comprobar", en: "Check", ca: "Comprova" },
