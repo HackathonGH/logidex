@@ -2,18 +2,17 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { ChevronLeft, ChevronRight, Pencil } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, Pencil } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 import { useI18n, type TKey } from "@/lib/i18n";
 import { toMadrid, madridToISO, fmtTime, errorCode, minutesBetween, nextAction } from "@/lib/reservations";
 import { StaffPage } from "@/components/StaffPage";
-import { GoodsPanel, IncidentsPanel } from "@/components/GoodsIncidents";
+import { GoodsPanel, IncidentsPanel, useOrders } from "@/components/GoodsIncidents";
 import { StatusBadges } from "@/components/ReservationBadges";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 
 export const Route = createFileRoute("/_authenticated/operaciones")({
   head: () => ({ meta: [{ title: "Agenda operativa — LOGIDEX" }, { name: "description", content: "Llegadas, muelles y ciclo de descarga del día" }] }),
@@ -40,7 +39,6 @@ function Board() {
       .subscribe();
     return () => { supabase.removeChannel(ch); };
   }, [qc]);
-  const sel = q.data?.find((r) => r.id === openId) ?? null;
 
   return (
     <div className="space-y-4">
@@ -54,25 +52,27 @@ function Board() {
       <div className="grid gap-2">
         {q.data?.map((r) => {
           const delay = r.arrived_at ? minutesBetween(r.starts_at, r.arrived_at) : null;
+          const isOpen = openId === r.id;
           return (
-            <button key={r.id} onClick={() => setOpenId(r.id)} className="grid gap-2 rounded-xl border border-border bg-card p-4 text-left transition-colors hover:border-secondary sm:grid-cols-[5rem_1fr_auto] sm:items-center">
-              <div className="font-display text-lg font-semibold">{fmtTime(r.starts_at)}</div>
-              <div>
-                <div className="font-medium">{r.code} · {r.companies?.name}</div>
-                <div className="text-sm text-muted-foreground">{r.total_pallets} {t("pallets").toLowerCase()} · {r.driver_name} · {r.tractor_plate}</div>
-              </div>
-              <div className="flex flex-wrap items-center gap-2 sm:justify-end">
-                {r.dock_id ? <Badge>{t("dock")} {r.dock_id}</Badge> : r.status === "on_site" ? <Badge variant="outline" className="border-warning/50 bg-warning/20">{t("waitingDock")}</Badge> : null}
-                {delay != null && delay > 0 && <Badge variant="outline">{t("delayMin")} {delay} {t("minutes")}</Badge>}
-                <StatusBadges status={r.status} rescheduled={r.rescheduled} penalty={r.penalty} />
-              </div>
-            </button>
+            <div key={r.id} className={`rounded-xl border bg-card transition-colors ${isOpen ? "border-secondary" : "border-border"}`}>
+              <button type="button" aria-expanded={isOpen} onClick={() => setOpenId(isOpen ? null : r.id)} className="grid w-full gap-2 p-4 text-left hover:bg-muted/40 sm:grid-cols-[5rem_1fr_auto] sm:items-center">
+                <div className="font-display text-lg font-semibold">{fmtTime(r.starts_at)}</div>
+                <div>
+                  <div className="font-medium">{r.code} · {r.companies?.name}</div>
+                  <div className="text-sm text-muted-foreground">{r.total_pallets} {t("pallets").toLowerCase()} · {r.driver_name} · {r.tractor_plate}</div>
+                </div>
+                <div className="flex flex-wrap items-center gap-2 sm:justify-end">
+                  {r.dock_id ? <Badge>{t("dock")} {r.dock_id}</Badge> : r.status === "on_site" ? <Badge variant="outline" className="border-warning/50 bg-warning/20">{t("waitingDock")}</Badge> : null}
+                  {delay != null && delay > 0 && <Badge variant="outline">{t("delayMin")} {delay} {t("minutes")}</Badge>}
+                  <StatusBadges status={r.status} rescheduled={r.rescheduled} penalty={r.penalty} />
+                  <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${isOpen ? "rotate-180" : ""}`} />
+                </div>
+              </button>
+              {isOpen && <div className="border-t border-border p-4"><Detail r={r} /></div>}
+            </div>
           );
         })}
       </div>
-      <Sheet open={!!sel} onOpenChange={(o) => !o && setOpenId(null)}>
-        <SheetContent className="overflow-y-auto">{sel && <Detail r={sel} />}</SheetContent>
-      </Sheet>
     </div>
   );
 }
@@ -100,18 +100,15 @@ function Detail({ r }: { r: Row }) {
   const mins = (a: string | null, b: string | null) => { const m = minutesBetween(a, b); return m == null ? "—" : `${m} ${t("minutes")}`; };
 
   return (
+    <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
     <div className="space-y-5">
-      <SheetHeader><SheetTitle>{r.code} · {r.companies?.name}</SheetTitle></SheetHeader>
-      <StatusBadges status={r.status} rescheduled={r.rescheduled} penalty={r.penalty} />
-
       <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
         <dt className="text-muted-foreground">{t("driver")}</dt><dd>{r.driver_name} · {r.driver_doc ?? "—"}</dd>
         <dt className="text-muted-foreground">{t("plate")}</dt><dd>{r.tractor_plate}{r.trailer_plate ? ` / ${r.trailer_plate}` : ""}</dd>
         <dt className="text-muted-foreground">{t("pallets")}</dt><dd>{r.total_pallets}</dd>
       </dl>
 
-      <GoodsPanel reservationId={r.id} status={r.status} />
-      <IncidentsPanel reservationId={r.id} />
+      <OrdersReadOnly reservationId={r.id} />
 
       <section className="grid grid-cols-2 gap-2 text-sm">
         {([["scheduled", r.starts_at], ["arrived", r.arrived_at], ["unloadStart", r.unload_started_at], ["unloadEnd", r.unload_ended_at], ["released", r.dock_released_at], ["departed", r.departed_at]] as const).map(([k, v]) => (
@@ -149,5 +146,25 @@ function Detail({ r }: { r: Row }) {
         <Link to="/reservas/$id" params={{ id: r.id }} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"><Pencil className="h-3 w-3" />{t("editReservation")}</Link>
       </div>
     </div>
+    <div className="space-y-4">
+      <div className="rounded-xl border border-border bg-background p-4"><GoodsPanel reservationId={r.id} status={r.status} /></div>
+      <div className="rounded-xl border border-border bg-background p-4"><IncidentsPanel reservationId={r.id} /></div>
+    </div>
+    </div>
+  );
+}
+
+function OrdersReadOnly({ reservationId }: { reservationId: string }) {
+  const { t } = useI18n();
+  const orders = useOrders(reservationId);
+  return (
+    <section className="space-y-2">
+      <h3 className="font-display font-semibold">{t("goods")}</h3>
+      {orders.data?.map((o) => (
+        <div key={o.id} className="flex justify-between rounded-md border border-border p-2 text-sm">
+          <span>{o.order_number} · {o.supplier}</span><strong>{o.pallets} {t("pallets").toLowerCase()}</strong>
+        </div>
+      ))}
+    </section>
   );
 }
