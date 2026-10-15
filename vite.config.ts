@@ -13,5 +13,5 @@ export default defineConfig({
     server: { entry: "server" },
   },
   // Pre-bundle so first visit to the QR page does not trigger a dependency re-optimization reload.
-  vite: { optimizeDeps: { include: ["qrcode.react", "@yudiel/react-qr-scanner"] } },
+  vite: { optimizeDeps: { include: ["qrcode.react", "@yudiel/react-qr-scanner", "@lovable.dev/cloud-auth-js"] } },
 });
