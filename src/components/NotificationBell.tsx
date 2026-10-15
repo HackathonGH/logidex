@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { AlertTriangle, Bell, Clock, Euro } from "lucide-react";
@@ -20,6 +20,7 @@ export function NotificationBell() {
   const roles = me.data?.roles ?? [];
   const staff = (roles.includes("admin") || roles.includes("administrativo")) && me.data?.profile?.status === "active";
   const uid = me.data?.user.id;
+  const [open, setOpen] = useState(false);
 
   const q = useQuery({
     queryKey: ["notifications"],
@@ -59,7 +60,7 @@ export function NotificationBell() {
   }
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button variant="ghost" size="icon" className="relative" aria-label={t("notifications")}>
           <Bell className="h-5 w-5" />
@@ -76,7 +77,7 @@ export function NotificationBell() {
           {list.map((n) => {
             const Icon = ICON[n.kind as keyof typeof ICON] ?? Bell;
             return (
-              <button key={n.id} type="button" onClick={() => { markRead([n.id]); if (n.kind === "incident") navigate({ to: "/incidencias" });
+              <button key={n.id} type="button" onClick={() => { setOpen(false); markRead([n.id]); if (n.kind === "incident") navigate({ to: "/incidencias" });
                 else navigate({ to: "/operaciones", search: { open: n.reservation_id, date: n.reservations ? toMadrid(new Date(n.reservations.starts_at)).date : undefined } }); }}
                 className={`flex w-full gap-3 border-b border-border px-3 py-2 text-left text-sm last:border-0 hover:bg-muted ${n.read ? "opacity-60" : ""}`}>
                 <Icon className={`mt-0.5 h-4 w-4 shrink-0 ${n.kind === "delay" ? "text-warning" : n.kind === "incident" ? "text-destructive" : "text-secondary"}`} />
