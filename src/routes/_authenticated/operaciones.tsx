@@ -154,7 +154,6 @@ function Detail({ r }: { r: Row }) {
         <Link to="/reservas/$id" params={{ id: r.id }} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"><Pencil className="h-3 w-3" />{t("editReservation")}</Link>
       </div>
     </div>
-    </div>
   );
 }
 
