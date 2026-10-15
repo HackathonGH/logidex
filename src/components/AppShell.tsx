@@ -38,12 +38,16 @@ export function AppShell({ children, name }: { children: ReactNode; name?: strin
     navigate({ to: "/", replace: true });
   }
   const [open, setOpen] = useState(false);
+  const me = useMe();
+  const mp = me.data?.profile;
+  // Hide navigation when the user has a single screen (e.g. carriers): nothing to switch to.
+  const showNav = !!me.data && mp?.status === "active" && !mp.must_change_password && menuForRoles(me.data.roles).length > 1;
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-border bg-card">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3">
           <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="lg:hidden" aria-label={t("menu")} onClick={() => setOpen(true)}><Menu className="h-5 w-5" /></Button>
+          <Button variant="ghost" size="icon" className={showNav ? "lg:hidden" : "hidden"} aria-label={t("menu")} onClick={() => setOpen(true)}><Menu className="h-5 w-5" /></Button>
           <Link to="/inicio" className="flex items-center gap-3">
             <img src={logo.url} alt="LOGIDEX" className="h-8 w-auto" />
           </Link>
@@ -59,7 +63,7 @@ export function AppShell({ children, name }: { children: ReactNode; name?: strin
         </div>
       </header>
       <div className="mx-auto flex max-w-7xl gap-6 px-4">
-        <aside className="hidden w-56 shrink-0 border-r border-border py-8 pr-4 lg:block"><div className="sticky top-4"><NavList /></div></aside>
+        {showNav && <aside className="hidden w-56 shrink-0 border-r border-border py-8 pr-4 lg:block"><div className="sticky top-4"><NavList /></div></aside>}
         <main className="min-w-0 flex-1 py-8">{children}</main>
       </div>
       <Sheet open={open} onOpenChange={setOpen}>
