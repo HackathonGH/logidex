@@ -5,7 +5,7 @@ import { AlertTriangle, Bell, Clock, Euro } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useMe } from "@/hooks/use-me";
 import { useI18n, type TKey } from "@/lib/i18n";
-import { fmtTime } from "@/lib/reservations";
+import { fmtTime, toMadrid } from "@/lib/reservations";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
@@ -76,7 +76,8 @@ export function NotificationBell() {
           {list.map((n) => {
             const Icon = ICON[n.kind as keyof typeof ICON] ?? Bell;
             return (
-              <button key={n.id} type="button" onClick={() => { markRead([n.id]); navigate({ to: n.kind === "incident" ? "/incidencias" : "/operaciones" }); }}
+              <button key={n.id} type="button" onClick={() => { markRead([n.id]); if (n.kind === "incident") navigate({ to: "/incidencias" });
+                else navigate({ to: "/operaciones", search: { open: n.reservation_id, date: n.reservations ? toMadrid(new Date(n.reservations.starts_at)).date : undefined } }); }}
                 className={`flex w-full gap-3 border-b border-border px-3 py-2 text-left text-sm last:border-0 hover:bg-muted ${n.read ? "opacity-60" : ""}`}>
                 <Icon className={`mt-0.5 h-4 w-4 shrink-0 ${n.kind === "delay" ? "text-warning" : n.kind === "incident" ? "text-destructive" : "text-secondary"}`} />
                 <div className="min-w-0 flex-1">
