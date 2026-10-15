@@ -9,7 +9,7 @@ export const Route = createFileRoute("/_authenticated/conciliacion")({
   head: () => ({ meta: [{ title: "Conciliación de mercancía — LOGIDEX" }, { name: "description", content: "Recuento de palets por pedido de cada entrega" }] }),
   component: () => (
     <StaffPage title="menu_reconcile">
-      {() => <DayDeliveries filter={(r) => ARRIVED.includes(r.status)}>{(r) => <GoodsPanel reservationId={r.id} status={r.status} />}</DayDeliveries>}
+      {() => <DayDeliveries accordion filter={(r) => ARRIVED.includes(r.status)}>{(r) => <GoodsPanel reservationId={r.id} status={r.status} />}</DayDeliveries>}
     </StaffPage>
   ),
 });
