@@ -1,4 +1,4 @@
-import { createFileRoute, ClientOnly, Link } from "@tanstack/react-router";
+import { createFileRoute, ClientOnly } from "@tanstack/react-router";
 import { lazy, Suspense, useState } from "react";
 import { toast } from "sonner";
 import { CheckCircle2, ShieldAlert } from "lucide-react";

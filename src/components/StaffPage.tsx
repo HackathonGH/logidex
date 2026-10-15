@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import { Link } from "@tanstack/react-router";
 import { useMe } from "@/hooks/use-me";
 import { useI18n, type TKey } from "@/lib/i18n";
 import { AppShell } from "@/components/AppShell";
