@@ -20,7 +20,6 @@ function AdminLayout() {
   return (
     <AppShell name={name}>
       <div className="mb-6 flex flex-wrap items-center gap-2">
-        <Link to="/inicio" className={tab}>← {t("back")}</Link>
         <Link to="/admin" activeOptions={{ exact: true }} className={tab} activeProps={active}>{t("requests")}</Link>
         <Link to="/admin/usuarios" className={tab} activeProps={active}>{t("users")}</Link>
         <Link to="/admin/ajustes" className={tab} activeProps={active}>{t("settings")}</Link>

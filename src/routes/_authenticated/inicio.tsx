@@ -1,12 +1,12 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Clock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useMe, useSettings } from "@/hooks/use-me";
 import { useI18n } from "@/lib/i18n";
-import { menuForRoles } from "@/lib/roles";
+import { homeForRoles } from "@/lib/roles";
 import { AppShell, ContactCard } from "@/components/AppShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,6 +20,10 @@ export const Route = createFileRoute("/_authenticated/inicio")({
 function Home() {
   const { t } = useI18n();
   const me = useMe();
+  const navigate = useNavigate();
+  const p0 = me.data?.profile;
+  const home = me.data && p0?.status === "active" && !p0.must_change_password ? homeForRoles(me.data.roles) : null;
+  useEffect(() => { if (home) navigate({ to: home, replace: true }); }, [home, navigate]);
   const settings = useSettings();
   if (me.isLoading || !me.data) return <AppShell><p className="text-muted-foreground">…</p></AppShell>;
   const { profile, roles, lastRequest } = me.data;
@@ -47,25 +51,9 @@ function Home() {
     );
   }
 
-  const items = menuForRoles(roles);
   return (
     <AppShell name={name}>
-      <h1 className="font-display text-2xl font-semibold">{t("hello")}, {name}</h1>
-      <p className="mt-1 text-sm text-muted-foreground">{roles.map((r) => t(`role_${r}`)).join(" · ")}</p>
-      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {items.map((i) =>
-          i.to ? (
-            <Link key={i.key} to={i.to} className="rounded-xl border border-border bg-card p-5 shadow-sm transition-colors hover:border-secondary">
-              <div className="font-display font-semibold">{t(i.key)}</div>
-            </Link>
-          ) : (
-            <div key={i.key} className="rounded-xl border border-dashed border-border bg-card/60 p-5">
-              <div className="font-display font-semibold">{t(i.key)}</div>
-              <div className="mt-1 text-xs text-muted-foreground">{t("comingSoon")}</div>
-            </div>
-          ),
-        )}
-      </div>
+      {!home && <p className="text-muted-foreground">{t("noAccess")} · {roles.map((r) => t(`role_${r}`)).join(" · ")}</p>}
     </AppShell>
   );
 }

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { menuForRoles, usernameToEmail, ASSIGNABLE_ROLES } from "./roles";
+import { homeForRoles, menuForRoles, usernameToEmail, ASSIGNABLE_ROLES } from "./roles";
 
 const keys = (r: Parameters<typeof menuForRoles>[0]) => menuForRoles(r).map((i) => i.key);
 
@@ -28,5 +28,13 @@ describe("usernameToEmail", () => {
 describe("assignable roles", () => {
   it("admin, administrativo, transportista and control de accesos", () => {
     expect(ASSIGNABLE_ROLES).toEqual(["admin", "administrativo", "transportista", "control_accesos"]);
+  });
+});
+
+describe("home after login", () => {
+  it("admin lands on users, administrativo on operations, carrier on bookings", () => {
+    expect(homeForRoles(["admin"])).toBe("/admin/usuarios");
+    expect(homeForRoles(["administrativo"])).toBe("/operaciones");
+    expect(homeForRoles(["transportista"])).toBe("/mis-reservas");
   });
 });

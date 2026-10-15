@@ -17,7 +17,6 @@ export function StaffPage({ title, children }: { title: TKey; children: (ctx: { 
   return (
     <AppShell name={name}>
       <div className="mb-6 flex flex-wrap items-center gap-3">
-        <Link to="/inicio" className="text-sm text-muted-foreground hover:text-foreground">← {t("back")}</Link>
         <h1 className="font-display text-2xl font-semibold">{t(title)}</h1>
       </div>
       {ok ? children({ isAdmin }) : <p>{t("noAccess")}</p>}
