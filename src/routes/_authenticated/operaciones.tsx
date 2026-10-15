@@ -144,7 +144,7 @@ function Detail({ r }: { r: Row }) {
           <Button variant="outline" className="border-destructive/40 text-destructive" disabled={busy}
             onClick={() => { if (window.confirm(t("noShowConfirm"))) run(() => supabase.rpc("staff_advance", { _id: r.id, _action: "no_show" })); }}>{t("act_no_show")}</Button>
         )}
-        <Link to="/reservas/$id" params={{ id: r.id }} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"><Pencil className="h-3 w-3" />{t("editReservation")}</Link>
+        {r.status === "confirmed" && <Link to="/reservas/$id" params={{ id: r.id }} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"><Pencil className="h-3 w-3" />{t("editReservation")}</Link>}
       </div>
     </div>
   );
