@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from "react";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { LogOut, Menu } from "lucide-react";
 import logo from "@/assets/logidex-logo.png.asset.json";
@@ -13,14 +13,15 @@ import { menuForRoles } from "@/lib/roles";
 function NavList({ onPick }: { onPick?: () => void }) {
   const { t } = useI18n();
   const me = useMe();
+  const path = useRouterState({ select: (st) => st.location.pathname });
   const p = me.data?.profile;
   if (!me.data || p?.status !== "active" || p.must_change_password) return null;
   const items = menuForRoles(me.data.roles);
   return (
     <nav className="flex flex-col gap-1">
       {items.map((i) => i.to && (
-        <Link key={i.key} to={i.to} onClick={onPick} className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-          activeProps={{ className: "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground" }}>{t(i.key)}</Link>
+        <Link key={i.key} to={i.to} onClick={onPick} className={`rounded-md px-3 py-2 text-sm font-medium transition-colors ${i.key === "menu_admin" ? (path.startsWith("/admin") ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted hover:text-foreground") : "text-muted-foreground hover:bg-muted hover:text-foreground"}`}
+          activeProps={i.key === "menu_admin" ? {} : { className: "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground" }}>{t(i.key)}</Link>
       ))}
     </nav>
   );
