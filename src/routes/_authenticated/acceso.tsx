@@ -1,4 +1,4 @@
-import { createFileRoute, ClientOnly, Link } from "@tanstack/react-router";
+import { createFileRoute, ClientOnly } from "@tanstack/react-router";
 import { lazy, Suspense, useState } from "react";
 import { toast } from "sonner";
 import { CheckCircle2, ShieldAlert } from "lucide-react";
@@ -59,7 +59,6 @@ function Gate() {
   return (
     <AppShell name={p?.full_name ?? p?.username}>
       <div className="mb-6 flex flex-wrap items-center gap-3">
-        <Link to="/inicio" className="text-sm text-muted-foreground hover:text-foreground">← {t("back")}</Link>
         <h1 className="font-display text-2xl font-semibold">{t("menu_scan")}</h1>
       </div>
       {me.isLoading ? <p className="text-muted-foreground">…</p> : !ok ? <p>{t("noAccess")}</p> : (

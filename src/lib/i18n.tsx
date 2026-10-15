@@ -35,6 +35,7 @@ const dict = {
   currentPwd: { es: "Contraseña actual", en: "Current password", ca: "Contrasenya actual" },
   newPwd: { es: "Nueva contraseña", en: "New password", ca: "Contrasenya nova" },
   hello: { es: "Hola", en: "Hello", ca: "Hola" },
+  menu: { es: "Menú", en: "Menu", ca: "Menú" },
   menu_admin: { es: "Administración", en: "Administration", ca: "Administració" },
   menu_reservations: { es: "Reservas", en: "Reservations", ca: "Reserves" },
   menu_blocks: { es: "Bloqueos y capacidad", en: "Blocks & capacity", ca: "Bloquejos i capacitat" },

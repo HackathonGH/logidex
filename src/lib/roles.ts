@@ -20,6 +20,16 @@ export function menuForRoles(roles: AppRole[]): MenuItem[] {
   return items;
 }
 
+export type HomePath = "/admin/usuarios" | "/operaciones" | "/mis-reservas" | "/acceso";
+/** Landing page after login: admin → users, administrativo → operations, carrier → bookings, gate → scan. */
+export function homeForRoles(roles: AppRole[]): HomePath | null {
+  if (roles.includes("admin")) return "/admin/usuarios";
+  if (roles.includes("administrativo")) return "/operaciones";
+  if (roles.includes("transportista")) return "/mis-reservas";
+  if (roles.includes("control_accesos")) return "/acceso";
+  return null;
+}
+
 /** Internal accounts log in with a username; auth needs an email, so derive one. */
 export function usernameToEmail(username: string): string {
   const u = username.trim().toLowerCase().replace(/[^a-z0-9._-]/g, "");
