@@ -40,6 +40,7 @@ function Board() {
     return () => { supabase.removeChannel(ch); };
   }, [qc]);
 
+  const sel = q.data?.find((r) => r.id === openId) ?? null;
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-2">
@@ -49,6 +50,7 @@ function Board() {
         <Button variant="ghost" onClick={() => setDate(toMadrid(new Date()).date)}>{t("today")}</Button>
       </div>
       {q.data && !q.data.length && <p className="text-muted-foreground">{t("noReservations")}</p>}
+      <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
       <div className="grid gap-2">
         {q.data?.map((r) => {
           const delay = r.arrived_at ? minutesBetween(r.starts_at, r.arrived_at) : null;
@@ -72,6 +74,13 @@ function Board() {
             </div>
           );
         })}
+      </div>
+      <div className="space-y-4 lg:sticky lg:top-4">
+        {sel ? (<>
+          <div className="rounded-xl border border-border bg-card p-4"><p className="mb-2 text-xs text-muted-foreground">{sel.code} · {sel.companies?.name}</p><GoodsPanel reservationId={sel.id} status={sel.status} /></div>
+          <div className="rounded-xl border border-border bg-card p-4"><p className="mb-2 text-xs text-muted-foreground">{sel.code} · {sel.companies?.name}</p><IncidentsPanel reservationId={sel.id} /></div>
+        </>) : <div className="rounded-xl border border-dashed border-border p-6 text-sm text-muted-foreground">{t("pickDelivery")}</div>}
+      </div>
       </div>
     </div>
   );
@@ -100,7 +109,6 @@ function Detail({ r }: { r: Row }) {
   const mins = (a: string | null, b: string | null) => { const m = minutesBetween(a, b); return m == null ? "—" : `${m} ${t("minutes")}`; };
 
   return (
-    <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
     <div className="space-y-5">
       <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
         <dt className="text-muted-foreground">{t("driver")}</dt><dd>{r.driver_name} · {r.driver_doc ?? "—"}</dd>
@@ -145,10 +153,6 @@ function Detail({ r }: { r: Row }) {
         )}
         <Link to="/reservas/$id" params={{ id: r.id }} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"><Pencil className="h-3 w-3" />{t("editReservation")}</Link>
       </div>
-    </div>
-    <div className="space-y-4">
-      <div className="rounded-xl border border-border bg-background p-4"><GoodsPanel reservationId={r.id} status={r.status} /></div>
-      <div className="rounded-xl border border-border bg-background p-4"><IncidentsPanel reservationId={r.id} /></div>
     </div>
     </div>
   );

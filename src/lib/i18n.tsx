@@ -257,6 +257,7 @@ const dict = {
   incidents: { es: "Incidencias", en: "Incidents", ca: "Incidències" },
   newIncident: { es: "Nueva incidencia", en: "New incident", ca: "Nova incidència" },
   noIncidents: { es: "Sin incidencias", en: "No incidents", ca: "Sense incidències" },
+  pickDelivery: { es: "Selecciona una entrega para conciliar la mercancía y gestionar incidencias", en: "Select a delivery to reconcile goods and manage incidents", ca: "Selecciona un lliurament per conciliar la mercaderia i gestionar incidències" },
   incType: { es: "Tipo", en: "Type", ca: "Tipus" },
   severity: { es: "Gravedad", en: "Severity", ca: "Gravetat" },
   description: { es: "Descripción", en: "Description", ca: "Descripció" },
