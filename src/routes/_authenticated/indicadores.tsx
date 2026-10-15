@@ -21,7 +21,7 @@ function Kpis() {
   const [from, setFrom] = useState(() => shift(today, -30));
   const [to, setTo] = useState(today);
   const q = useQuery({
-    queryKey: ["kpis", from, to],
+    queryKey: ["kpis-v2", from, to],
     queryFn: async () => {
       const a = madridToISO(from, "00:00"), b = madridToISO(shift(to, 1), "00:00");
       const [{ data: rows }, { data: inc }, { data: ords }] = await Promise.all([
@@ -41,12 +41,12 @@ function Kpis() {
     ["kpiCancelled", k.cancelled], ["kpiPenalty", k.penalty], ["kpiIncidents", q.data?.inc.length ?? 0],
   ];
   const byType = new Map<string, number>();
-  q.data?.inc.forEach((i) => byType.set(i.type, (byType.get(i.type) ?? 0) + 1));
+  (q.data?.inc ?? []).forEach((i) => byType.set(i.type, (byType.get(i.type) ?? 0) + 1));
   const companies = new Map<string, { name: string; rows: typeof rows }>();
   rows.forEach((r) => { const c = companies.get(r.company_id) ?? { name: r.companies?.name ?? "—", rows: [] }; c.rows.push(r); companies.set(r.company_id, c); });
 
   const sup = new Map<string, { orders: number; planned: number; accepted: number; rejected: number; missing: number; noShow: number; incidents: number }>();
-  q.data?.ords.forEach((o) => {
+  (q.data?.ords ?? []).forEach((o) => {
     const k = o.supplier.trim();
     const c = sup.get(k) ?? { orders: 0, planned: 0, accepted: 0, rejected: 0, missing: 0, noShow: 0, incidents: 0 };
     if (o.reservations.status !== "cancelled") { c.orders++; c.planned += o.pallets; }
