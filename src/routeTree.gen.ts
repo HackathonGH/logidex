@@ -16,6 +16,7 @@ import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedBloqueosRouteImport } from './routes/_authenticated/bloqueos'
 import { Route as AuthenticatedConciliacionRouteImport } from './routes/_authenticated/conciliacion'
 import { Route as AuthenticatedIncidenciasRouteImport } from './routes/_authenticated/incidencias'
+import { Route as AuthenticatedIndicadoresRouteImport } from './routes/_authenticated/indicadores'
 import { Route as AuthenticatedInicioRouteImport } from './routes/_authenticated/inicio'
 import { Route as AuthenticatedOperacionesRouteImport } from './routes/_authenticated/operaciones'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
@@ -61,6 +62,12 @@ const AuthenticatedIncidenciasRoute =
   AuthenticatedIncidenciasRouteImport.update({
     id: '/incidencias',
     path: '/incidencias',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedIndicadoresRoute =
+  AuthenticatedIndicadoresRouteImport.update({
+    id: '/indicadores',
+    path: '/indicadores',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedInicioRoute = AuthenticatedInicioRouteImport.update({
@@ -128,6 +135,7 @@ export interface FileRoutesByFullPath {
   '/bloqueos': typeof AuthenticatedBloqueosRoute
   '/conciliacion': typeof AuthenticatedConciliacionRoute
   '/incidencias': typeof AuthenticatedIncidenciasRoute
+  '/indicadores': typeof AuthenticatedIndicadoresRoute
   '/inicio': typeof AuthenticatedInicioRoute
   '/operaciones': typeof AuthenticatedOperacionesRoute
   '/admin/ajustes': typeof AuthenticatedAdminAjustesRoute
@@ -145,6 +153,7 @@ export interface FileRoutesByTo {
   '/bloqueos': typeof AuthenticatedBloqueosRoute
   '/conciliacion': typeof AuthenticatedConciliacionRoute
   '/incidencias': typeof AuthenticatedIncidenciasRoute
+  '/indicadores': typeof AuthenticatedIndicadoresRoute
   '/inicio': typeof AuthenticatedInicioRoute
   '/operaciones': typeof AuthenticatedOperacionesRoute
   '/admin/ajustes': typeof AuthenticatedAdminAjustesRoute
@@ -165,6 +174,7 @@ export interface FileRoutesById {
   '/_authenticated/bloqueos': typeof AuthenticatedBloqueosRoute
   '/_authenticated/conciliacion': typeof AuthenticatedConciliacionRoute
   '/_authenticated/incidencias': typeof AuthenticatedIncidenciasRoute
+  '/_authenticated/indicadores': typeof AuthenticatedIndicadoresRoute
   '/_authenticated/inicio': typeof AuthenticatedInicioRoute
   '/_authenticated/operaciones': typeof AuthenticatedOperacionesRoute
   '/_authenticated/admin/ajustes': typeof AuthenticatedAdminAjustesRoute
@@ -185,6 +195,7 @@ export interface FileRouteTypes {
     | '/bloqueos'
     | '/conciliacion'
     | '/incidencias'
+    | '/indicadores'
     | '/inicio'
     | '/operaciones'
     | '/admin/ajustes'
@@ -202,6 +213,7 @@ export interface FileRouteTypes {
     | '/bloqueos'
     | '/conciliacion'
     | '/incidencias'
+    | '/indicadores'
     | '/inicio'
     | '/operaciones'
     | '/admin/ajustes'
@@ -221,6 +233,7 @@ export interface FileRouteTypes {
     | '/_authenticated/bloqueos'
     | '/_authenticated/conciliacion'
     | '/_authenticated/incidencias'
+    | '/_authenticated/indicadores'
     | '/_authenticated/inicio'
     | '/_authenticated/operaciones'
     | '/_authenticated/admin/ajustes'
@@ -287,6 +300,13 @@ declare module '@tanstack/react-router' {
       path: '/incidencias'
       fullPath: '/incidencias'
       preLoaderRoute: typeof AuthenticatedIncidenciasRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/indicadores': {
+      id: '/_authenticated/indicadores'
+      path: '/indicadores'
+      fullPath: '/indicadores'
+      preLoaderRoute: typeof AuthenticatedIndicadoresRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/inicio': {
@@ -383,6 +403,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedBloqueosRoute: typeof AuthenticatedBloqueosRoute
   AuthenticatedConciliacionRoute: typeof AuthenticatedConciliacionRoute
   AuthenticatedIncidenciasRoute: typeof AuthenticatedIncidenciasRoute
+  AuthenticatedIndicadoresRoute: typeof AuthenticatedIndicadoresRoute
   AuthenticatedInicioRoute: typeof AuthenticatedInicioRoute
   AuthenticatedOperacionesRoute: typeof AuthenticatedOperacionesRoute
   AuthenticatedMisReservasIdRoute: typeof AuthenticatedMisReservasIdRoute
@@ -398,6 +419,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedBloqueosRoute: AuthenticatedBloqueosRoute,
   AuthenticatedConciliacionRoute: AuthenticatedConciliacionRoute,
   AuthenticatedIncidenciasRoute: AuthenticatedIncidenciasRoute,
+  AuthenticatedIndicadoresRoute: AuthenticatedIndicadoresRoute,
   AuthenticatedInicioRoute: AuthenticatedInicioRoute,
   AuthenticatedOperacionesRoute: AuthenticatedOperacionesRoute,
   AuthenticatedMisReservasIdRoute: AuthenticatedMisReservasIdRoute,
