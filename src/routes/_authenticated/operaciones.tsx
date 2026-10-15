@@ -16,9 +16,9 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 
 export const Route = createFileRoute("/_authenticated/operaciones")({
-  validateSearch: (s: Record<string, unknown>): { open?: string; date?: string } => ({
-    open: typeof s.open === "string" ? s.open : undefined,
-    date: typeof s.date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(s.date) ? s.date : undefined,
+  validateSearch: (s: Record<string, unknown>): { open?: string | undefined; date?: string | undefined } => ({
+    open: typeof s["open"] === "string" ? s["open"] : undefined,
+    date: typeof s["date"] === "string" && /^\d{4}-\d{2}-\d{2}$/.test(s["date"]) ? s["date"] : undefined,
   }),
   head: () => ({ meta: [{ title: "Agenda operativa — LOGIDEX" }, { name: "description", content: "Llegadas, muelles y ciclo de descarga del día" }] }),
   component: () => <StaffPage title="menu_operations">{() => <Board />}</StaffPage>,
