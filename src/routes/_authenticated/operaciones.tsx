@@ -16,6 +16,10 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 
 export const Route = createFileRoute("/_authenticated/operaciones")({
+  validateSearch: (s: Record<string, unknown>): { open?: string | undefined; date?: string | undefined } => ({
+    open: typeof s["open"] === "string" ? s["open"] : undefined,
+    date: typeof s["date"] === "string" && /^\d{4}-\d{2}-\d{2}$/.test(s["date"]) ? s["date"] : undefined,
+  }),
   head: () => ({ meta: [{ title: "Agenda operativa — LOGIDEX" }, { name: "description", content: "Llegadas, muelles y ciclo de descarga del día" }] }),
   component: () => <StaffPage title="menu_operations">{() => <Board />}</StaffPage>,
 });
@@ -29,6 +33,14 @@ function Board() {
   const qc = useQueryClient();
   const [date, setDate] = useState(() => toMadrid(new Date()).date);
   const [openId, setOpenId] = useState<string | null>(null);
+  const search = Route.useSearch();
+  useEffect(() => {
+    if (search.date) setDate(search.date);
+    if (search.open) {
+      setOpenId(search.open);
+      setTimeout(() => document.getElementById(`res-${search.open}`)?.scrollIntoView({ behavior: "smooth", block: "start" }), 400);
+    }
+  }, [search.open, search.date]);
   const q = useQuery({
     queryKey: ["ops", date],
     queryFn: async () => (await supabase.from("reservations").select("*, companies(name)")
@@ -56,7 +68,7 @@ function Board() {
           const delay = r.arrived_at ? minutesBetween(r.starts_at, r.arrived_at) : null;
           const isOpen = openId === r.id;
           return (
-            <div key={r.id} className={`rounded-xl border bg-card transition-colors ${isOpen ? "border-secondary" : "border-border"}`}>
+            <div key={r.id} id={`res-${r.id}`} className={`rounded-xl border bg-card transition-colors ${isOpen ? "border-secondary" : "border-border"}`}>
               <button type="button" aria-expanded={isOpen} onClick={() => setOpenId(isOpen ? null : r.id)} className="grid w-full gap-2 p-4 text-left hover:bg-muted/40 sm:grid-cols-[5rem_1fr_auto] sm:items-center">
                 <div className="font-display text-lg font-semibold">{fmtTime(r.starts_at)}</div>
                 <div>
