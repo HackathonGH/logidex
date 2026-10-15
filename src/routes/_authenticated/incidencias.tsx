@@ -5,5 +5,5 @@ import { IncidentsPanel } from "@/components/GoodsIncidents";
 
 export const Route = createFileRoute("/_authenticated/incidencias")({
   head: () => ({ meta: [{ title: "Incidencias — LOGIDEX" }, { name: "description", content: "Registro y seguimiento de incidencias por entrega" }] }),
-  component: () => <StaffPage title="menu_incidents">{() => <DayDeliveries>{(r) => <IncidentsPanel reservationId={r.id} />}</DayDeliveries>}</StaffPage>,
+  component: () => <StaffPage title="menu_incidents">{() => <DayDeliveries accordion>{(r) => <IncidentsPanel reservationId={r.id} />}</DayDeliveries>}</StaffPage>,
 });
