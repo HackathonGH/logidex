@@ -7,6 +7,8 @@ import { fmtDateTime, fmtTime } from "@/lib/reservations";
 import { CarrierPage } from "@/components/CarrierPage";
 import { StatusBadges } from "@/components/ReservationBadges";
 import { Button } from "@/components/ui/button";
+import { ContactCard } from "@/components/AppShell";
+import { useSettings } from "@/hooks/use-me";
 
 export const Route = createFileRoute("/_authenticated/mis-reservas/")({
   head: () => ({ meta: [{ title: "Mis reservas — LOGIDEX" }, { name: "description", content: "Reservas de descarga de tu empresa" }] }),
@@ -15,6 +17,7 @@ export const Route = createFileRoute("/_authenticated/mis-reservas/")({
 
 function MyBookings() {
   const { t, lang } = useI18n();
+  const settings = useSettings();
   const q = useQuery({
     queryKey: ["my-bookings"],
     queryFn: async () => (await supabase.from("reservations").select("id, code, starts_at, ends_at, total_pallets, status, rescheduled, penalty, driver_name").order("starts_at", { ascending: false })).data ?? [],
@@ -38,6 +41,7 @@ function MyBookings() {
           </Link>
         ))}
       </div>
+      <ContactCard phone={settings.data?.contact_phone} email={settings.data?.contact_email} />
     </div>
   );
 }

@@ -11,8 +11,6 @@ import { usernameToEmail } from "@/lib/roles";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ContactCard } from "@/components/AppShell";
-import { useSettings } from "@/hooks/use-me";
 import { bootstrapDemoAccounts } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/")({
@@ -32,7 +30,6 @@ export const Route = createFileRoute("/")({
 function Welcome() {
   const { t } = useI18n();
   const navigate = useNavigate();
-  const settings = useSettings();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
@@ -119,9 +116,6 @@ function Welcome() {
             )}
           </div>
 
-          <div className="mt-12">
-            <ContactCard phone={settings.data?.contact_phone} email={settings.data?.contact_email} />
-          </div>
         </div>
       </main>
     </div>
