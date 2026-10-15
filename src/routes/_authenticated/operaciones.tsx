@@ -54,25 +54,27 @@ function Board() {
       <div className="grid gap-2">
         {q.data?.map((r) => {
           const delay = r.arrived_at ? minutesBetween(r.starts_at, r.arrived_at) : null;
+          const isOpen = openId === r.id;
           return (
-            <button key={r.id} onClick={() => setOpenId(r.id)} className="grid gap-2 rounded-xl border border-border bg-card p-4 text-left transition-colors hover:border-secondary sm:grid-cols-[5rem_1fr_auto] sm:items-center">
-              <div className="font-display text-lg font-semibold">{fmtTime(r.starts_at)}</div>
-              <div>
-                <div className="font-medium">{r.code} · {r.companies?.name}</div>
-                <div className="text-sm text-muted-foreground">{r.total_pallets} {t("pallets").toLowerCase()} · {r.driver_name} · {r.tractor_plate}</div>
-              </div>
-              <div className="flex flex-wrap items-center gap-2 sm:justify-end">
-                {r.dock_id ? <Badge>{t("dock")} {r.dock_id}</Badge> : r.status === "on_site" ? <Badge variant="outline" className="border-warning/50 bg-warning/20">{t("waitingDock")}</Badge> : null}
-                {delay != null && delay > 0 && <Badge variant="outline">{t("delayMin")} {delay} {t("minutes")}</Badge>}
-                <StatusBadges status={r.status} rescheduled={r.rescheduled} penalty={r.penalty} />
-              </div>
-            </button>
+            <div key={r.id} className={`rounded-xl border bg-card transition-colors ${isOpen ? "border-secondary" : "border-border"}`}>
+              <button type="button" aria-expanded={isOpen} onClick={() => setOpenId(isOpen ? null : r.id)} className="grid w-full gap-2 p-4 text-left hover:bg-muted/40 sm:grid-cols-[5rem_1fr_auto] sm:items-center">
+                <div className="font-display text-lg font-semibold">{fmtTime(r.starts_at)}</div>
+                <div>
+                  <div className="font-medium">{r.code} · {r.companies?.name}</div>
+                  <div className="text-sm text-muted-foreground">{r.total_pallets} {t("pallets").toLowerCase()} · {r.driver_name} · {r.tractor_plate}</div>
+                </div>
+                <div className="flex flex-wrap items-center gap-2 sm:justify-end">
+                  {r.dock_id ? <Badge>{t("dock")} {r.dock_id}</Badge> : r.status === "on_site" ? <Badge variant="outline" className="border-warning/50 bg-warning/20">{t("waitingDock")}</Badge> : null}
+                  {delay != null && delay > 0 && <Badge variant="outline">{t("delayMin")} {delay} {t("minutes")}</Badge>}
+                  <StatusBadges status={r.status} rescheduled={r.rescheduled} penalty={r.penalty} />
+                  <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${isOpen ? "rotate-180" : ""}`} />
+                </div>
+              </button>
+              {isOpen && <div className="border-t border-border p-4"><Detail r={r} /></div>}
+            </div>
           );
         })}
       </div>
-      <Sheet open={!!sel} onOpenChange={(o) => !o && setOpenId(null)}>
-        <SheetContent className="overflow-y-auto">{sel && <Detail r={sel} />}</SheetContent>
-      </Sheet>
     </div>
   );
 }
@@ -100,18 +102,15 @@ function Detail({ r }: { r: Row }) {
   const mins = (a: string | null, b: string | null) => { const m = minutesBetween(a, b); return m == null ? "—" : `${m} ${t("minutes")}`; };
 
   return (
+    <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
     <div className="space-y-5">
-      <SheetHeader><SheetTitle>{r.code} · {r.companies?.name}</SheetTitle></SheetHeader>
-      <StatusBadges status={r.status} rescheduled={r.rescheduled} penalty={r.penalty} />
-
       <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
         <dt className="text-muted-foreground">{t("driver")}</dt><dd>{r.driver_name} · {r.driver_doc ?? "—"}</dd>
         <dt className="text-muted-foreground">{t("plate")}</dt><dd>{r.tractor_plate}{r.trailer_plate ? ` / ${r.trailer_plate}` : ""}</dd>
         <dt className="text-muted-foreground">{t("pallets")}</dt><dd>{r.total_pallets}</dd>
       </dl>
 
-      <GoodsPanel reservationId={r.id} status={r.status} />
-      <IncidentsPanel reservationId={r.id} />
+      <OrdersReadOnly reservationId={r.id} />
 
       <section className="grid grid-cols-2 gap-2 text-sm">
         {([["scheduled", r.starts_at], ["arrived", r.arrived_at], ["unloadStart", r.unload_started_at], ["unloadEnd", r.unload_ended_at], ["released", r.dock_released_at], ["departed", r.departed_at]] as const).map(([k, v]) => (
