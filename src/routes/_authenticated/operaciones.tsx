@@ -2,18 +2,17 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { ChevronLeft, ChevronRight, Pencil } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, Pencil } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 import { useI18n, type TKey } from "@/lib/i18n";
 import { toMadrid, madridToISO, fmtTime, errorCode, minutesBetween, nextAction } from "@/lib/reservations";
 import { StaffPage } from "@/components/StaffPage";
-import { GoodsPanel, IncidentsPanel } from "@/components/GoodsIncidents";
+import { GoodsPanel, IncidentsPanel, useOrders } from "@/components/GoodsIncidents";
 import { StatusBadges } from "@/components/ReservationBadges";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 
 export const Route = createFileRoute("/_authenticated/operaciones")({
   head: () => ({ meta: [{ title: "Agenda operativa — LOGIDEX" }, { name: "description", content: "Llegadas, muelles y ciclo de descarga del día" }] }),
@@ -148,5 +147,25 @@ function Detail({ r }: { r: Row }) {
         <Link to="/reservas/$id" params={{ id: r.id }} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"><Pencil className="h-3 w-3" />{t("editReservation")}</Link>
       </div>
     </div>
+    <div className="space-y-4">
+      <div className="rounded-xl border border-border bg-background p-4"><GoodsPanel reservationId={r.id} status={r.status} /></div>
+      <div className="rounded-xl border border-border bg-background p-4"><IncidentsPanel reservationId={r.id} /></div>
+    </div>
+    </div>
+  );
+}
+
+function OrdersReadOnly({ reservationId }: { reservationId: string }) {
+  const { t } = useI18n();
+  const orders = useOrders(reservationId);
+  return (
+    <section className="space-y-2">
+      <h3 className="font-display font-semibold">{t("goods")}</h3>
+      {orders.data?.map((o) => (
+        <div key={o.id} className="flex justify-between rounded-md border border-border p-2 text-sm">
+          <span>{o.order_number} · {o.supplier}</span><strong>{o.pallets} {t("pallets").toLowerCase()}</strong>
+        </div>
+      ))}
+    </section>
   );
 }
