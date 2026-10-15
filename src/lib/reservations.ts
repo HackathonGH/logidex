@@ -110,3 +110,31 @@ export const INCIDENT_FILE_MAX = 10 * 1024 * 1024;
 export function incidentFileOk(f: { type: string; size: number }): boolean {
   return (f.type.startsWith("image/") || f.type === "application/pdf") && f.size <= INCIDENT_FILE_MAX;
 }
+
+/** UI mirror of staff_detect_delays: confirmed, not arrived, 15+ min past scheduled time. */
+export function isDelayed(r: { status: string; starts_at: string; arrived_at?: string | null }, now: Date = new Date()): boolean {
+  return r.status === "confirmed" && !r.arrived_at && now.getTime() - new Date(r.starts_at).getTime() >= 15 * 60_000;
+}
+
+export type KpiRow = {
+  status: string; starts_at: string; arrived_at: string | null; unload_started_at: string | null; unload_ended_at: string | null;
+  delay_alerted_at: string | null; penalty: boolean; total_pallets: number;
+};
+const avg = (xs: number[]) => (xs.length ? Math.round(xs.reduce((a, b) => a + b, 0) / xs.length) : null);
+/** Indicators. No-show rate is over bookings that were due (cancelled ones excluded). */
+export function computeKpis(rows: KpiRow[]) {
+  const cancelled = rows.filter((r) => r.status === "cancelled").length;
+  const due = rows.length - cancelled;
+  const noShow = rows.filter((r) => r.status === "no_show").length;
+  const m = (a: string | null, b: string | null) => minutesBetween(a, b);
+  return {
+    total: rows.length, cancelled, noShow,
+    noShowRate: due ? Math.round((noShow / due) * 1000) / 10 : 0,
+    delayed: rows.filter((r) => r.delay_alerted_at).length,
+    penalty: rows.filter((r) => r.penalty).length,
+    avgDelay: avg(rows.filter((r) => r.arrived_at).map((r) => Math.max(0, m(r.starts_at, r.arrived_at) ?? 0))),
+    avgWait: avg(rows.filter((r) => r.arrived_at && r.unload_started_at).map((r) => m(r.arrived_at, r.unload_started_at) ?? 0)),
+    avgUnload: avg(rows.filter((r) => r.unload_started_at && r.unload_ended_at).map((r) => m(r.unload_started_at, r.unload_ended_at) ?? 0)),
+    pallets: rows.filter((r) => r.arrived_at).reduce((s, r) => s + r.total_pallets, 0),
+  };
+}

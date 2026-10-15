@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useMe } from "@/hooks/use-me";
 import { menuForRoles } from "@/lib/roles";
+import { NotificationBell } from "@/components/NotificationBell";
 
 function NavList({ onPick }: { onPick?: () => void }) {
   const { t } = useI18n();
@@ -54,6 +55,7 @@ export function AppShell({ children, name }: { children: ReactNode; name?: strin
           </div>
           <div className="flex items-center gap-3">
             {name && <span className="hidden text-sm text-muted-foreground sm:inline">{name}</span>}
+            <NotificationBell />
             <LangSwitcher />
             <Button variant="ghost" size="sm" onClick={signOut}>
               <LogOut className="mr-1 h-4 w-4" />

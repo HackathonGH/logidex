@@ -6,9 +6,10 @@ import { ChevronDown, ChevronLeft, ChevronRight, Pencil } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 import { useI18n, type TKey } from "@/lib/i18n";
-import { toMadrid, madridToISO, fmtTime, errorCode, minutesBetween, nextAction } from "@/lib/reservations";
+import { toMadrid, madridToISO, fmtTime, errorCode, minutesBetween, nextAction, isDelayed } from "@/lib/reservations";
 import { StaffPage } from "@/components/StaffPage";
 import { useOrders } from "@/components/GoodsIncidents";
+import { DelayBox } from "@/components/DelayBox";
 import { StatusBadges } from "@/components/ReservationBadges";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -64,6 +65,7 @@ function Board() {
                 </div>
                 <div className="flex flex-wrap items-center gap-2 sm:justify-end">
                   {r.dock_id ? <Badge>{t("dock")} {r.dock_id}</Badge> : r.status === "on_site" ? <Badge variant="outline" className="border-warning/50 bg-warning/20">{t("waitingDock")}</Badge> : null}
+                  {isDelayed(r) && <Badge variant="outline" className="border-warning/50 bg-warning/20">{t("delayDetected")}</Badge>}
                   {delay != null && delay > 0 && <Badge variant="outline">{t("delayMin")} {delay} {t("minutes")}</Badge>}
                   <StatusBadges status={r.status} rescheduled={r.rescheduled} penalty={r.penalty} />
                   <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${isOpen ? "rotate-180" : ""}`} />
@@ -98,6 +100,7 @@ function Detail({ r }: { r: Row }) {
     toast.success(t("saved")); done();
   }
   const next = nextAction(r.status);
+  const noShow = () => { if (window.confirm(t("noShowConfirm"))) run(() => supabase.rpc("staff_advance", { _id: r.id, _action: "no_show" })); };
   const fmt = (v: string | null) => (v ? fmtTime(v) : "—");
   const mins = (a: string | null, b: string | null) => { const m = minutesBetween(a, b); return m == null ? "—" : `${m} ${t("minutes")}`; };
 
@@ -108,6 +111,8 @@ function Detail({ r }: { r: Row }) {
         <dt className="text-muted-foreground">{t("plate")}</dt><dd>{r.tractor_plate}{r.trailer_plate ? ` / ${r.trailer_plate}` : ""}</dd>
         <dt className="text-muted-foreground">{t("pallets")}</dt><dd>{r.total_pallets}</dd>
       </dl>
+
+      {isDelayed(r) && <DelayBox id={r.id} alerted={!!r.delay_alerted_at} onNoShow={noShow} />}
 
       <OrdersReadOnly reservationId={r.id} />
 
@@ -140,9 +145,8 @@ function Detail({ r }: { r: Row }) {
 
       <div className="flex flex-col gap-2">
         {next && <Button size="lg" disabled={busy} onClick={() => run(() => supabase.rpc("staff_advance", { _id: r.id, _action: next }))}>{t(`act_${next}` as TKey)}</Button>}
-        {r.status === "confirmed" && (
-          <Button variant="outline" className="border-destructive/40 text-destructive" disabled={busy}
-            onClick={() => { if (window.confirm(t("noShowConfirm"))) run(() => supabase.rpc("staff_advance", { _id: r.id, _action: "no_show" })); }}>{t("act_no_show")}</Button>
+        {r.status === "confirmed" && !isDelayed(r) && (
+          <Button variant="outline" className="border-destructive/40 text-destructive" disabled={busy} onClick={noShow}>{t("act_no_show")}</Button>
         )}
         {r.status === "confirmed" && <Link to="/reservas/$id" params={{ id: r.id }} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"><Pencil className="h-3 w-3" />{t("editReservation")}</Link>}
       </div>
