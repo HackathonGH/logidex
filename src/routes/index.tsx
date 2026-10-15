@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Truck, Building2 } from "lucide-react";
-import logo from "@/assets/logidex-logo.png.asset.json";
+import logoSrc from "@/assets/logidex-logo-clear.png";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { LangSwitcher, useI18n } from "@/lib/i18n";
@@ -70,7 +70,7 @@ function Welcome() {
       </div>
       <div className="mx-auto max-w-5xl px-4 pb-16 pt-8">
         <div className="flex flex-col items-center text-center">
-          <img src={logo.url} alt="LOGIDEX" className="h-16 w-auto sm:h-20" />
+          <img src={logoSrc} alt="LOGIDEX" className="h-16 w-auto sm:h-20" />
           <p className="mt-4 font-display text-xl font-semibold text-secondary">{t("tagline")}</p>
           <h1 className="mt-2 text-sm uppercase tracking-widest text-muted-foreground">{t("welcome")}</h1>
         </div>
