@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 import { useI18n } from "@/lib/i18n";
@@ -16,7 +16,7 @@ function addDays(d: string, n: number) {
 }
 
 /** Day picker + delivery list on the left, a panel for the selected delivery on the right. */
-export function DayDeliveries({ filter, children }: { filter?: (r: DayRow) => boolean; children: (r: DayRow) => ReactNode }) {
+export function DayDeliveries({ filter, children, accordion }: { accordion?: boolean; filter?: (r: DayRow) => boolean; children: (r: DayRow) => ReactNode }) {
   const { t } = useI18n();
   const [date, setDate] = useState(() => toMadrid(new Date()).date);
   const [sel, setSel] = useState<string | null>(null);
@@ -36,6 +36,28 @@ export function DayDeliveries({ filter, children }: { filter?: (r: DayRow) => bo
         <Button variant="ghost" onClick={() => setDate(toMadrid(new Date()).date)}>{t("today")}</Button>
       </div>
       {q.data && !list.length && <p className="text-muted-foreground">{t("noReservations")}</p>}
+      {accordion ? (
+        <div className="grid gap-2">
+          {list.map((r) => {
+            const open = sel === r.id;
+            return (
+              <div key={r.id} className={`rounded-xl border bg-card transition-colors ${open ? "border-secondary" : "border-border"}`}>
+                <button type="button" aria-expanded={open} onClick={() => setSel(open ? null : r.id)} className="flex w-full flex-wrap items-center justify-between gap-2 p-4 text-left hover:bg-muted/40">
+                  <div>
+                    <div className="font-medium"><span className="font-display text-lg font-semibold">{fmtTime(r.starts_at)}</span> · {r.code} · {r.companies?.name}</div>
+                    <div className="text-sm text-muted-foreground">{r.total_pallets} {t("pallets").toLowerCase()} · {r.driver_name} · {r.tractor_plate}</div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <StatusBadges status={r.status} rescheduled={r.rescheduled} penalty={r.penalty} />
+                    <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`} />
+                  </div>
+                </button>
+                {open && <div className="border-t border-border p-4">{children(r)}</div>}
+              </div>
+            );
+          })}
+        </div>
+      ) : (
       <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)]">
         <div className="grid gap-2">
           {list.map((r) => (
@@ -53,6 +75,7 @@ export function DayDeliveries({ filter, children }: { filter?: (r: DayRow) => bo
           </div>
         )}
       </div>
+      )}
     </div>
   );
 }
