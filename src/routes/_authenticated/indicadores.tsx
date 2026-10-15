@@ -78,10 +78,10 @@ function Kpis() {
       <section className="overflow-x-auto rounded-xl border border-border bg-card p-4">
         <h3 className="mb-2 font-display font-semibold">{t("bySupplier")}</h3>
         <table className="w-full text-sm">
-          <thead className="text-left text-xs text-muted-foreground"><tr><th className="py-1">{t("supplierCol")}</th><th>{t("ordersCol")}</th><th>{t("planned")}</th><th>{t("accepted")}</th><th>{t("rejected")}</th><th>{t("missing")}</th><th>{t("kpiNoShow")}</th><th>{t("kpiIncidents")}</th></tr></thead>
+          <thead className="text-center text-xs text-muted-foreground"><tr><th className="py-1 text-left">{t("supplierCol")}</th><th>{t("ordersCol")}</th><th>{t("planned")}</th><th>{t("accepted")}</th><th>{t("rejected")}</th><th>{t("missing")}</th><th>{t("kpiNoShow")}</th><th>{t("kpiIncidents")}</th></tr></thead>
           <tbody>
             {[...sup].sort((x, y) => y[1].planned - x[1].planned).map(([name, c]) => (
-              <tr key={name} className="border-t border-border"><td className="py-1.5">{name}</td><td>{c.orders}</td><td>{c.planned}</td><td>{c.accepted}</td><td>{c.rejected}</td><td>{c.missing}</td><td>{c.noShow}</td><td>{c.incidents}</td></tr>
+              <tr key={name} className="text-center border-t border-border"><td className="py-1.5 text-left">{name}</td><td>{c.orders}</td><td>{c.planned}</td><td>{c.accepted}</td><td>{c.rejected}</td><td>{c.missing}</td><td>{c.noShow}</td><td>{c.incidents}</td></tr>
             ))}
           </tbody>
         </table>
@@ -89,10 +89,10 @@ function Kpis() {
       <section className="overflow-x-auto rounded-xl border border-border bg-card p-4">
         <h3 className="mb-2 font-display font-semibold">{t("byCompany")}</h3>
         <table className="w-full text-sm">
-          <thead className="text-left text-xs text-muted-foreground"><tr><th className="py-1">{t("company")}</th><th>{t("kpiTotal")}</th><th>{t("kpiNoShow")}</th><th>{t("kpiNoShowRate")}</th><th>{t("kpiDelayed")}</th><th>{t("kpiAvgDelay")}</th><th>{t("kpiPenalty")}</th></tr></thead>
+          <thead className="text-center text-xs text-muted-foreground"><tr><th className="py-1 text-left">{t("company")}</th><th>{t("kpiTotal")}</th><th>{t("kpiNoShow")}</th><th>{t("kpiNoShowRate")}</th><th>{t("kpiDelayed")}</th><th>{t("kpiAvgDelay")}</th><th>{t("kpiPenalty")}</th></tr></thead>
           <tbody>
             {[...companies.values()].map((c) => { const x = computeKpis(c.rows); return (
-              <tr key={c.name} className="border-t border-border"><td className="py-1.5">{c.name}</td><td>{x.total}</td><td>{x.noShow}</td><td>{x.noShowRate}%</td><td>{x.delayed}</td><td>{min(x.avgDelay)}</td><td>{x.penalty}</td></tr>
+              <tr key={c.name} className="text-center border-t border-border"><td className="py-1.5 text-left">{c.name}</td><td>{x.total}</td><td>{x.noShow}</td><td>{x.noShowRate}%</td><td>{x.delayed}</td><td>{min(x.avgDelay)}</td><td>{x.penalty}</td></tr>
             ); })}
           </tbody>
         </table>
