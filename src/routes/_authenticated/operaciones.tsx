@@ -39,7 +39,6 @@ function Board() {
       .subscribe();
     return () => { supabase.removeChannel(ch); };
   }, [qc]);
-  const sel = q.data?.find((r) => r.id === openId) ?? null;
 
   return (
     <div className="space-y-4">
