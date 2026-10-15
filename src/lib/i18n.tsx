@@ -268,7 +268,6 @@ const dict = {
   kpiIncidents: { es: "Incidencias", en: "Incidents", ca: "Incidències" },
   kpiPallets: { es: "Palets recibidos", en: "Pallets received", ca: "Palets rebuts" },
   byCompany: { es: "Por transportista", en: "By carrier", ca: "Per transportista" },
-  company: { es: "Empresa", en: "Company", ca: "Empresa" },
   carrierWaiting: { es: "Esperando muelle de descarga", en: "Waiting for unloading dock", ca: "Esperant moll de descàrrega" },
   carrierGoDock: { es: "Diríjase al muelle número", en: "Go to dock number", ca: "Adreceu-vos al moll número" },
   carrierUnloading: { es: "Descargando en el muelle", en: "Unloading at dock", ca: "Descarregant al moll" },
