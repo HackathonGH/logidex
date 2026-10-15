@@ -9,7 +9,7 @@ describe("role menus", () => {
     expect(keys(["administrativo"])).not.toContain("menu_admin");
   });
   it("admin and administrativo can edit reservations and blocks", () => {
-    expect(keys(["administrativo"])).toEqual(["menu_operations", "menu_reservations", "menu_blocks", "menu_scan"]);
+    expect(keys(["administrativo"])).toEqual(["menu_operations", "menu_reconcile", "menu_incidents", "menu_reservations", "menu_blocks", "menu_scan"]);
     expect(keys(["transportista"])).not.toContain("menu_reservations");
   });
   it("Control de accesos only sees the QR scan", () => {

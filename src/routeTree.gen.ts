@@ -14,6 +14,8 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedAccesoRouteImport } from './routes/_authenticated/acceso'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedBloqueosRouteImport } from './routes/_authenticated/bloqueos'
+import { Route as AuthenticatedConciliacionRouteImport } from './routes/_authenticated/conciliacion'
+import { Route as AuthenticatedIncidenciasRouteImport } from './routes/_authenticated/incidencias'
 import { Route as AuthenticatedInicioRouteImport } from './routes/_authenticated/inicio'
 import { Route as AuthenticatedOperacionesRouteImport } from './routes/_authenticated/operaciones'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
@@ -49,6 +51,18 @@ const AuthenticatedBloqueosRoute = AuthenticatedBloqueosRouteImport.update({
   path: '/bloqueos',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedConciliacionRoute =
+  AuthenticatedConciliacionRouteImport.update({
+    id: '/conciliacion',
+    path: '/conciliacion',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedIncidenciasRoute =
+  AuthenticatedIncidenciasRouteImport.update({
+    id: '/incidencias',
+    path: '/incidencias',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedInicioRoute = AuthenticatedInicioRouteImport.update({
   id: '/inicio',
   path: '/inicio',
@@ -112,6 +126,8 @@ export interface FileRoutesByFullPath {
   '/acceso': typeof AuthenticatedAccesoRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/bloqueos': typeof AuthenticatedBloqueosRoute
+  '/conciliacion': typeof AuthenticatedConciliacionRoute
+  '/incidencias': typeof AuthenticatedIncidenciasRoute
   '/inicio': typeof AuthenticatedInicioRoute
   '/operaciones': typeof AuthenticatedOperacionesRoute
   '/admin/ajustes': typeof AuthenticatedAdminAjustesRoute
@@ -127,6 +143,8 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/acceso': typeof AuthenticatedAccesoRoute
   '/bloqueos': typeof AuthenticatedBloqueosRoute
+  '/conciliacion': typeof AuthenticatedConciliacionRoute
+  '/incidencias': typeof AuthenticatedIncidenciasRoute
   '/inicio': typeof AuthenticatedInicioRoute
   '/operaciones': typeof AuthenticatedOperacionesRoute
   '/admin/ajustes': typeof AuthenticatedAdminAjustesRoute
@@ -145,6 +163,8 @@ export interface FileRoutesById {
   '/_authenticated/acceso': typeof AuthenticatedAccesoRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/bloqueos': typeof AuthenticatedBloqueosRoute
+  '/_authenticated/conciliacion': typeof AuthenticatedConciliacionRoute
+  '/_authenticated/incidencias': typeof AuthenticatedIncidenciasRoute
   '/_authenticated/inicio': typeof AuthenticatedInicioRoute
   '/_authenticated/operaciones': typeof AuthenticatedOperacionesRoute
   '/_authenticated/admin/ajustes': typeof AuthenticatedAdminAjustesRoute
@@ -163,6 +183,8 @@ export interface FileRouteTypes {
     | '/acceso'
     | '/admin'
     | '/bloqueos'
+    | '/conciliacion'
+    | '/incidencias'
     | '/inicio'
     | '/operaciones'
     | '/admin/ajustes'
@@ -178,6 +200,8 @@ export interface FileRouteTypes {
     | '/'
     | '/acceso'
     | '/bloqueos'
+    | '/conciliacion'
+    | '/incidencias'
     | '/inicio'
     | '/operaciones'
     | '/admin/ajustes'
@@ -195,6 +219,8 @@ export interface FileRouteTypes {
     | '/_authenticated/acceso'
     | '/_authenticated/admin'
     | '/_authenticated/bloqueos'
+    | '/_authenticated/conciliacion'
+    | '/_authenticated/incidencias'
     | '/_authenticated/inicio'
     | '/_authenticated/operaciones'
     | '/_authenticated/admin/ajustes'
@@ -247,6 +273,20 @@ declare module '@tanstack/react-router' {
       path: '/bloqueos'
       fullPath: '/bloqueos'
       preLoaderRoute: typeof AuthenticatedBloqueosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/conciliacion': {
+      id: '/_authenticated/conciliacion'
+      path: '/conciliacion'
+      fullPath: '/conciliacion'
+      preLoaderRoute: typeof AuthenticatedConciliacionRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/incidencias': {
+      id: '/_authenticated/incidencias'
+      path: '/incidencias'
+      fullPath: '/incidencias'
+      preLoaderRoute: typeof AuthenticatedIncidenciasRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/inicio': {
@@ -341,6 +381,8 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAccesoRoute: typeof AuthenticatedAccesoRoute
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedBloqueosRoute: typeof AuthenticatedBloqueosRoute
+  AuthenticatedConciliacionRoute: typeof AuthenticatedConciliacionRoute
+  AuthenticatedIncidenciasRoute: typeof AuthenticatedIncidenciasRoute
   AuthenticatedInicioRoute: typeof AuthenticatedInicioRoute
   AuthenticatedOperacionesRoute: typeof AuthenticatedOperacionesRoute
   AuthenticatedMisReservasIdRoute: typeof AuthenticatedMisReservasIdRoute
@@ -354,6 +396,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAccesoRoute: AuthenticatedAccesoRoute,
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedBloqueosRoute: AuthenticatedBloqueosRoute,
+  AuthenticatedConciliacionRoute: AuthenticatedConciliacionRoute,
+  AuthenticatedIncidenciasRoute: AuthenticatedIncidenciasRoute,
   AuthenticatedInicioRoute: AuthenticatedInicioRoute,
   AuthenticatedOperacionesRoute: AuthenticatedOperacionesRoute,
   AuthenticatedMisReservasIdRoute: AuthenticatedMisReservasIdRoute,
