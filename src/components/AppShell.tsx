@@ -2,7 +2,7 @@ import { useState, type ReactNode } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { LogOut, Menu } from "lucide-react";
-import logoSrc from "@/assets/logidex-logo-clear.png";
+import logoSrc from "@/assets/logidex-logo-a.png";
 import { supabase } from "@/integrations/supabase/client";
 import { LangSwitcher, useI18n } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
@@ -50,7 +50,7 @@ export function AppShell({ children, name }: { children: ReactNode; name?: strin
           <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon" className={showNav ? "lg:hidden" : "hidden"} aria-label={t("menu")} onClick={() => setOpen(true)}><Menu className="h-5 w-5" /></Button>
           <Link to="/inicio" className="flex items-center gap-3">
-            <img src={logoSrc} alt="LOGIDEX" className="h-8 w-auto" />
+            <img src={logoSrc} alt="LOGIDEX" className="h-10 w-auto" />
           </Link>
           </div>
           <div className="flex items-center gap-3">
@@ -70,7 +70,7 @@ export function AppShell({ children, name }: { children: ReactNode; name?: strin
       </div>
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent side="left" className="w-64">
-          <SheetHeader><SheetTitle><img src={logoSrc} alt="LOGIDEX" className="h-7 w-auto" /></SheetTitle></SheetHeader>
+          <SheetHeader><SheetTitle><img src={logoSrc} alt="LOGIDEX" className="h-10 w-auto" /></SheetTitle></SheetHeader>
           <div className="mt-6"><NavList onPick={() => setOpen(false)} /></div>
         </SheetContent>
       </Sheet>
