@@ -87,6 +87,7 @@ const dict = {
   trailerPlate: { es: "Matrícula remolque (opcional)", en: "Trailer plate (optional)", ca: "Matrícula remolc (opcional)" },
   orders: { es: "Pedidos", en: "Orders", ca: "Comandes" },
   orderNumber: { es: "Nº pedido", en: "Order no.", ca: "Núm. comanda" },
+  orderHint: { es: "Todos los números de pedido empiezan por 4500 seguido de 6 dígitos.", en: "All order numbers start with 4500 followed by 6 digits.", ca: "Tots els números de comanda comencen per 4500 seguit de 6 dígits." },
   supplier: { es: "Proveedor", en: "Supplier", ca: "Proveïdor" },
   addOrder: { es: "Añadir pedido", en: "Add order", ca: "Afegeix comanda" },
   total: { es: "Total", en: "Total", ca: "Total" },

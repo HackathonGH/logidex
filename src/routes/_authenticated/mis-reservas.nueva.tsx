@@ -12,6 +12,7 @@ import { ContactCard } from "@/components/AppShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export const Route = createFileRoute("/_authenticated/mis-reservas/nueva")({
   head: () => ({ meta: [{ title: "Nueva reserva — LOGIDEX" }, { name: "description", content: "Reserva una franja de descarga" }] }),
@@ -69,7 +70,19 @@ function NewBooking() {
         </div>
         {orders.map((o, i) => (
           <div key={i} className="grid gap-2 sm:grid-cols-[1fr_1.4fr_6rem_auto] sm:items-end">
-            <div className="space-y-1"><Label className="text-xs">{t("orderNumber")}</Label><Input inputMode="numeric" maxLength={10} value={o.order_number} onChange={(e) => setOrder(i, { order_number: e.target.value.replace(/\D/g, "") })} /></div>
+            <div className="space-y-1">
+              <div className="flex items-center gap-1">
+                <Label className="text-xs">{t("orderNumber")}</Label>
+                <TooltipProvider delayDuration={100}><Tooltip><TooltipTrigger asChild>
+                  <button type="button" aria-label={t("orderHint")} className="text-muted-foreground hover:text-foreground"><Info className="h-3.5 w-3.5" /></button>
+                </TooltipTrigger><TooltipContent className="max-w-xs">{t("orderHint")}</TooltipContent></Tooltip></TooltipProvider>
+              </div>
+              <div className="flex h-9 items-center rounded-md border border-input bg-background focus-within:ring-1 focus-within:ring-ring">
+                <span className="pl-3 font-mono text-sm">4500</span>
+                <input inputMode="numeric" maxLength={6} placeholder="XXXXXX" className="h-full w-full min-w-0 bg-transparent pr-3 font-mono text-sm outline-none placeholder:text-muted-foreground"
+                  value={o.order_number.slice(4)} onChange={(e) => setOrder(i, { order_number: "4500" + e.target.value.replace(/\D/g, "").slice(0, 6) })} />
+              </div>
+            </div>
             <div className="space-y-1"><Label className="text-xs">{t("supplier")}</Label><Input value={o.supplier} onChange={(e) => setOrder(i, { supplier: e.target.value })} /></div>
             <div className="space-y-1"><Label className="text-xs">{t("pallets")}</Label><Input type="number" min={1} max={66} value={o.pallets} onChange={(e) => setOrder(i, { pallets: Number(e.target.value) })} /></div>
             <Button type="button" variant="ghost" size="icon" aria-label={t("delete")} disabled={orders.length <= 1} onClick={() => setOrders(orders.filter((_, j) => j !== i))}><Trash2 className="h-4 w-4" /></Button>
