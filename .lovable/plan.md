@@ -16,3 +16,7 @@ Tablas afectadas:
 - Función pura `sortRows(rows, getter, dir)` en `src/lib/sort.ts`: números, fechas ISO y textos (localeCompare con idioma), vacíos al final; test en `src/lib/sort.test.ts`.
 - Reservas: la consulta pasa a `order("starts_at", { ascending: false })` para que el límite de 200 traiga las más recientes; el ordenado se aplica en pantalla. Estado ordena por su texto traducido.
 - Indicadores: se mantiene el estilo actual de las tablas, solo se convierten los `<th>` en cabeceras clicables.
+
+## Texto del código QR
+En la ficha de la reserva del transportista (la que aparece al crear una reserva nueva), justo debajo del código QR se mostrará en texto su contenido, en letra monoespaciada y seleccionable para poder copiarlo o dictarlo en el control de accesos.
+- Técnico: en `mis-reservas.$id.tsx`, añadir el texto de `r.qr_token` (font-mono, break-all, select-all) tras `QRCodeSVG`.
