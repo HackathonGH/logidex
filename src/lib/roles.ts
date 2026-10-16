@@ -14,7 +14,7 @@ export function menuForRoles(roles: AppRole[]): MenuItem[] {
   const has = (r: AppRole) => roles.includes(r);
   if (has("admin")) items.push({ key: "menu_admin", to: "/admin/usuarios" });
   const manager = has("admin") || has("administrativo");
-  if (manager) items.push({ key: "menu_operations", to: "/operaciones" }, { key: "menu_reconcile", to: "/conciliacion" }, { key: "menu_incidents", to: "/incidencias" }, { key: "menu_reservations", to: "/reservas" }, { key: "menu_blocks", to: "/bloqueos" }, { key: "menu_indicators", to: "/indicadores" });
+  if (manager) items.push({ key: "menu_operations", to: "/operaciones" }, { key: "menu_reservations", to: "/reservas" }, { key: "menu_indicators", to: "/indicadores" }, { key: "menu_reconcile", to: "/conciliacion" }, { key: "menu_incidents", to: "/incidencias" }, { key: "menu_blocks", to: "/bloqueos" });
   if (has("transportista")) items.push({ key: "menu_book", to: "/mis-reservas" });
   if (manager || has("control_accesos")) items.push({ key: "menu_scan", to: "/acceso" });
   return items;

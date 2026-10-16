@@ -78,8 +78,8 @@ export function NotificationBell() {
             const Icon = ICON[n.kind as keyof typeof ICON] ?? Bell;
             return (
               <button key={n.id} type="button" onClick={() => { setOpen(false); markRead([n.id]); if (n.kind === "incident") navigate({ to: "/incidencias" });
-                else navigate({ to: "/operaciones", search: { open: n.reservation_id, date: n.reservations ? toMadrid(new Date(n.reservations.starts_at)).date : undefined } }); }}
-                className={`flex w-full gap-3 border-b border-border px-3 py-2 text-left text-sm last:border-0 hover:bg-muted ${n.read ? "opacity-60" : ""}`}>
+                else navigate({ to: "/operaciones", search: { open: n.reservation_id, date: n.reservations ? toMadrid(new Date(n.reservations.starts_at)).date : undefined, t: Date.now() } }); }}
+                className={`flex w-full cursor-pointer gap-3 border-b border-border px-3 py-2 text-left text-sm last:border-0 hover:bg-muted ${n.read ? "bg-muted/30" : ""}`}>
                 <Icon className={`mt-0.5 h-4 w-4 shrink-0 ${n.kind === "delay" ? "text-warning" : n.kind === "incident" ? "text-destructive" : "text-secondary"}`} />
                 <div className="min-w-0 flex-1">
                   <div className="font-medium">{t(`n_${n.kind}` as TKey)}{n.resolved_at ? ` · ${t("n_resolved")}` : ""}</div>

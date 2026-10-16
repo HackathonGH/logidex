@@ -16,9 +16,10 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 
 export const Route = createFileRoute("/_authenticated/operaciones")({
-  validateSearch: (s: Record<string, unknown>): { open?: string | undefined; date?: string | undefined } => ({
+  validateSearch: (s: Record<string, unknown>): { open?: string | undefined; date?: string | undefined; t?: number | undefined } => ({
     open: typeof s["open"] === "string" ? s["open"] : undefined,
     date: typeof s["date"] === "string" && /^\d{4}-\d{2}-\d{2}$/.test(s["date"]) ? s["date"] : undefined,
+    t: typeof s["t"] === "number" ? s["t"] : undefined,
   }),
   head: () => ({ meta: [{ title: "Agenda operativa — LOGIDEX" }, { name: "description", content: "Llegadas, muelles y ciclo de descarga del día" }] }),
   component: () => <StaffPage title="menu_operations">{() => <Board />}</StaffPage>,
@@ -40,7 +41,7 @@ function Board() {
       setOpenId(search.open);
       setTimeout(() => document.getElementById(`res-${search.open}`)?.scrollIntoView({ behavior: "smooth", block: "start" }), 400);
     }
-  }, [search.open, search.date]);
+  }, [search.open, search.date, search.t]);
   const q = useQuery({
     queryKey: ["ops", date],
     queryFn: async () => (await supabase.from("reservations").select("*, companies(name)")
