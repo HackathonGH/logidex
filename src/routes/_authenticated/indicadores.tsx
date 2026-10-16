@@ -7,6 +7,8 @@ import { computeKpis, madridToISO, toMadrid } from "@/lib/reservations";
 import { StaffPage } from "@/components/StaffPage";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { SortButton, useSort } from "@/components/SortableHead";
+import { sortRows } from "@/lib/sort";
 
 export const Route = createFileRoute("/_authenticated/indicadores")({
   head: () => ({ meta: [{ title: "Indicadores — LOGIDEX" }, { name: "description", content: "No presentados, retrasos y tiempos de descarga" }] }),
@@ -16,7 +18,9 @@ export const Route = createFileRoute("/_authenticated/indicadores")({
 function shift(d: string, n: number) { const x = new Date(`${d}T12:00:00Z`); x.setUTCDate(x.getUTCDate() + n); return x.toISOString().slice(0, 10); }
 
 function Kpis() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
+  const sSort = useSort<"name" | "orders" | "planned" | "accepted" | "rejected" | "missing" | "noShow" | "incidents">("planned", "desc");
+  const cSort = useSort<"name" | "total" | "noShow" | "noShowRate" | "delayed" | "avgDelay" | "penalty">("name");
   const today = toMadrid(new Date()).date;
   const [from, setFrom] = useState(() => shift(today, -30));
   const [to, setTo] = useState(today);
@@ -55,6 +59,9 @@ function Kpis() {
     c.incidents += q.data?.inc.filter((i) => i.order_id === o.id).length ?? 0;
     sup.set(k, c);
   });
+  const supRows = sortRows([...sup], ([name, c]) => (sSort.key === "name" ? name : c[sSort.key]), sSort.dir, lang);
+  const compRows = sortRows([...companies.values()].map((c) => ({ name: c.name, x: computeKpis(c.rows) })),
+    ({ name, x }) => (cSort.key === "name" ? name : x[cSort.key]), cSort.dir, lang);
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-end gap-3">
@@ -78,9 +85,14 @@ function Kpis() {
       <section className="overflow-x-auto rounded-xl border border-border bg-card p-4">
         <h3 className="mb-2 font-display font-semibold">{t("bySupplier")}</h3>
         <table className="w-full text-sm">
-          <thead className="text-center text-xs text-muted-foreground"><tr><th className="py-1 text-left">{t("supplierCol")}</th><th>{t("ordersCol")}</th><th>{t("planned")}</th><th>{t("accepted")}</th><th>{t("rejected")}</th><th>{t("missing")}</th><th>{t("kpiNoShow")}</th><th>{t("kpiIncidents")}</th></tr></thead>
+          <thead className="text-center text-xs text-muted-foreground"><tr>
+            <th className="py-1 text-left"><SortButton k="name" sort={sSort}>{t("supplierCol")}</SortButton></th>
+            {(["orders", "planned", "accepted", "rejected", "missing", "noShow", "incidents"] as const).map((key, i) => (
+              <th key={key}><SortButton k={key} sort={sSort}>{t((["ordersCol", "planned", "accepted", "rejected", "missing", "kpiNoShow", "kpiIncidents"] as TKey[])[i] as TKey)}</SortButton></th>
+            ))}
+          </tr></thead>
           <tbody>
-            {[...sup].sort((x, y) => y[1].planned - x[1].planned).map(([name, c]) => (
+            {supRows.map(([name, c]) => (
               <tr key={name} className="text-center border-t border-border"><td className="py-1.5 text-left">{name}</td><td>{c.orders}</td><td>{c.planned}</td><td>{c.accepted}</td><td>{c.rejected}</td><td>{c.missing}</td><td>{c.noShow}</td><td>{c.incidents}</td></tr>
             ))}
           </tbody>
@@ -89,11 +101,16 @@ function Kpis() {
       <section className="overflow-x-auto rounded-xl border border-border bg-card p-4">
         <h3 className="mb-2 font-display font-semibold">{t("byCompany")}</h3>
         <table className="w-full text-sm">
-          <thead className="text-center text-xs text-muted-foreground"><tr><th className="py-1 text-left">{t("company")}</th><th>{t("kpiTotal")}</th><th>{t("kpiNoShow")}</th><th>{t("kpiNoShowRate")}</th><th>{t("kpiDelayed")}</th><th>{t("kpiAvgDelay")}</th><th>{t("kpiPenalty")}</th></tr></thead>
+          <thead className="text-center text-xs text-muted-foreground"><tr>
+            <th className="py-1 text-left"><SortButton k="name" sort={cSort}>{t("company")}</SortButton></th>
+            {(["total", "noShow", "noShowRate", "delayed", "avgDelay", "penalty"] as const).map((key, i) => (
+              <th key={key}><SortButton k={key} sort={cSort}>{t((["kpiTotal", "kpiNoShow", "kpiNoShowRate", "kpiDelayed", "kpiAvgDelay", "kpiPenalty"] as TKey[])[i] as TKey)}</SortButton></th>
+            ))}
+          </tr></thead>
           <tbody>
-            {[...companies.values()].map((c) => { const x = computeKpis(c.rows); return (
-              <tr key={c.name} className="text-center border-t border-border"><td className="py-1.5 text-left">{c.name}</td><td>{x.total}</td><td>{x.noShow}</td><td>{x.noShowRate}%</td><td>{x.delayed}</td><td>{min(x.avgDelay)}</td><td>{x.penalty}</td></tr>
-            ); })}
+            {compRows.map(({ name, x }) => (
+              <tr key={name} className="text-center border-t border-border"><td className="py-1.5 text-left">{name}</td><td>{x.total}</td><td>{x.noShow}</td><td>{x.noShowRate}%</td><td>{x.delayed}</td><td>{min(x.avgDelay)}</td><td>{x.penalty}</td></tr>
+            ))}
           </tbody>
         </table>
       </section>

@@ -13,6 +13,8 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { SortButton, useSort } from "@/components/SortableHead";
+import { sortRows, type SortVal } from "@/lib/sort";
 
 export const Route = createFileRoute("/_authenticated/admin/usuarios")({ component: Users });
 
@@ -36,6 +38,14 @@ function Users() {
       }));
     },
   });
+  const { lang } = useI18n();
+  const sort = useSort<"name" | "user" | "role" | "status">("name");
+  type U = NonNullable<typeof q.data>[number];
+  const roleText = (u: U) => u.roles.filter((r): r is AppRole => (ASSIGNABLE_ROLES as string[]).includes(r)).map((r) => t(`role_${r}`)).join(", ");
+  const getters: Record<typeof sort.key, (u: U) => SortVal> = {
+    name: (u) => u.full_name, user: (u) => (u.is_internal ? u.username : u.email), role: roleText, status: (u) => t(`st_${u.status}` as never),
+  };
+  const rows = sortRows(q.data ?? [], getters[sort.key], sort.dir, lang);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -75,15 +85,15 @@ function Users() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>{t("fullName")}</TableHead>
-              <TableHead>{t("username")} / {t("email")}</TableHead>
-              <TableHead>{t("role")}</TableHead>
-              <TableHead>{t("status")}</TableHead>
+              <TableHead><SortButton k="name" sort={sort}>{t("fullName")}</SortButton></TableHead>
+              <TableHead><SortButton k="user" sort={sort}>{t("username")} / {t("email")}</SortButton></TableHead>
+              <TableHead><SortButton k="role" sort={sort}>{t("role")}</SortButton></TableHead>
+              <TableHead><SortButton k="status" sort={sort}>{t("status")}</SortButton></TableHead>
               <TableHead />
             </TableRow>
           </TableHeader>
           <TableBody>
-            {q.data?.map((u) => (
+            {rows.map((u) => (
               <TableRow key={u.id}>
                 <TableCell>{u.full_name}<div className="text-xs text-muted-foreground">{u.company}</div></TableCell>
                 <TableCell className="text-sm">{u.is_internal ? u.username : u.email}</TableCell>

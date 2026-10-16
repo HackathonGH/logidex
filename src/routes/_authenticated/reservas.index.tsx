@@ -11,6 +11,8 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { SortButton, useSort } from "@/components/SortableHead";
+import { sortRows, type SortVal } from "@/lib/sort";
 
 export const Route = createFileRoute("/_authenticated/reservas/")({
   head: () => ({ meta: [{ title: "Reservas — LOGIDEX" }, { name: "description", content: "Listado y edición de reservas de descarga" }] }),
@@ -29,7 +31,7 @@ function ReservationList() {
   const q = useQuery({
     queryKey: ["reservations", f],
     queryFn: async () => {
-      let qb = supabase.from("reservations").select("*, companies(name)").order("starts_at").limit(200);
+      let qb = supabase.from("reservations").select("*, companies(name)").order("starts_at", { ascending: false }).limit(200);
       if (f.date) {
         const next = new Date(f.date + "T00:00:00Z");
         next.setUTCDate(next.getUTCDate() + 1);
@@ -44,6 +46,13 @@ function ReservationList() {
       return data;
     },
   });
+  const sort = useSort<"code" | "date" | "company" | "pallets" | "driver" | "plate" | "status">("date", "desc");
+  type R = NonNullable<typeof q.data>[number];
+  const getters: Record<typeof sort.key, (r: R) => SortVal> = {
+    code: (r) => r.code, date: (r) => r.starts_at, company: (r) => r.companies?.name, pallets: (r) => r.total_pallets,
+    driver: (r) => r.driver_name, plate: (r) => r.tractor_plate, status: (r) => t(`rs_${r.status}` as TKey),
+  };
+  const rows = sortRows(q.data ?? [], getters[sort.key], sort.dir, lang);
 
   return (
     <div className="space-y-4">
@@ -77,17 +86,17 @@ function ReservationList() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>{t("code")}</TableHead>
-              <TableHead>{t("date")}</TableHead>
-              <TableHead>{t("company")}</TableHead>
-              <TableHead>{t("pallets")}</TableHead>
-              <TableHead>{t("driver")}</TableHead>
-              <TableHead>{t("plate")}</TableHead>
-              <TableHead>{t("status")}</TableHead>
+              <TableHead><SortButton k="code" sort={sort}>{t("code")}</SortButton></TableHead>
+              <TableHead><SortButton k="date" sort={sort}>{t("date")}</SortButton></TableHead>
+              <TableHead><SortButton k="company" sort={sort}>{t("company")}</SortButton></TableHead>
+              <TableHead><SortButton k="pallets" sort={sort}>{t("pallets")}</SortButton></TableHead>
+              <TableHead><SortButton k="driver" sort={sort}>{t("driver")}</SortButton></TableHead>
+              <TableHead><SortButton k="plate" sort={sort}>{t("plate")}</SortButton></TableHead>
+              <TableHead><SortButton k="status" sort={sort}>{t("status")}</SortButton></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {q.data?.map((r) => (
+            {rows.map((r) => (
               <TableRow key={r.id} className="cursor-pointer">
                 <TableCell>
                   <Link to="/reservas/$id" params={{ id: r.id }} className="font-medium text-primary underline-offset-2 hover:underline">{r.code}</Link>
