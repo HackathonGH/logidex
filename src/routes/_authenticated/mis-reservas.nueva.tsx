@@ -123,7 +123,7 @@ function NewBooking() {
       </section>
 
       <div className="flex justify-end">
-        <Button size="lg" onClick={submit} disabled={busy || !time || !!ordersErr}>{t("confirmBooking")}</Button>
+        <Button size="lg" onClick={submit} disabled={busy || !time || !!ordersErr || !drv.name.trim() || !drv.doc.trim() || !drv.tractor.trim()}>{t("confirmBooking")}</Button>
       </div>
     </div>
   );
