@@ -11,3 +11,6 @@
 - [x] Phase 3b: incidents (type, severity, status, order, attachments) + goods reconciliation per order
 - [x] Phase 4: +15 min delay alerts (deduplicated), keep/reschedule/no-show decision, notification centre, indicators
 - [ ] Push notifications (OneSignal) — deferred by user
+
+- [x] Ordenar tablas por columna (Reservas por fecha desc.)
+- [x] Mostrar texto del QR debajo del código
