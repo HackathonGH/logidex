@@ -122,6 +122,7 @@ function BookingDetail() {
         {r.qr_valid && editable ? (
           <>
             <div className="rounded-lg bg-background p-3"><QRCodeSVG value={r.qr_token} size={200} /></div>
+            <p className="max-w-[230px] select-all break-all font-mono text-sm">{r.qr_token}</p>
             <p className="text-xs text-muted-foreground">{t("qrHint")}</p>
           </>
         ) : (
