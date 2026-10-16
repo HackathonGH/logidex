@@ -88,7 +88,7 @@ function Kpis() {
           <thead className="text-center text-xs text-muted-foreground"><tr>
             <th className="py-1 text-left"><SortButton k="name" sort={sSort}>{t("supplierCol")}</SortButton></th>
             {(["orders", "planned", "accepted", "rejected", "missing", "noShow", "incidents"] as const).map((key, i) => (
-              <th key={key}><SortButton k={key} sort={sSort}>{t((["ordersCol", "planned", "accepted", "rejected", "missing", "kpiNoShow", "kpiIncidents"] as TKey[])[i])}</SortButton></th>
+              <th key={key}><SortButton k={key} sort={sSort}>{t((["ordersCol", "planned", "accepted", "rejected", "missing", "kpiNoShow", "kpiIncidents"] as TKey[])[i] as TKey)}</SortButton></th>
             ))}
           </tr></thead>
           <tbody>
@@ -104,7 +104,7 @@ function Kpis() {
           <thead className="text-center text-xs text-muted-foreground"><tr>
             <th className="py-1 text-left"><SortButton k="name" sort={cSort}>{t("company")}</SortButton></th>
             {(["total", "noShow", "noShowRate", "delayed", "avgDelay", "penalty"] as const).map((key, i) => (
-              <th key={key}><SortButton k={key} sort={cSort}>{t((["kpiTotal", "kpiNoShow", "kpiNoShowRate", "kpiDelayed", "kpiAvgDelay", "kpiPenalty"] as TKey[])[i])}</SortButton></th>
+              <th key={key}><SortButton k={key} sort={cSort}>{t((["kpiTotal", "kpiNoShow", "kpiNoShowRate", "kpiDelayed", "kpiAvgDelay", "kpiPenalty"] as TKey[])[i] as TKey)}</SortButton></th>
             ))}
           </tr></thead>
           <tbody>
